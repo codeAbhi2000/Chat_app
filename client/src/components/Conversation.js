@@ -3,103 +3,41 @@ import {
   Avatar,
   Box,
   IconButton,
-  InputAdornment,
   Stack,
-  TextField,
   Typography,
   useTheme,
 } from "@mui/material";
 import StyledBadge from "./StyledBadge";
 import { faker } from "@faker-js/faker";
 import SearchBar from "./SearchBar";
-import styled from "@emotion/styled";
-import { LinkSimple, PaperPlaneTilt, Smiley } from "phosphor-react";
+import { PaperPlaneTilt } from "phosphor-react";
 import Messages from "./Messages";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import ActionButtons from "./ActionButtons";
-// import { useDispatch } from "react-redux";
-// import { ToggleSidebar } from "../redux/slices/app";
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderWidth: 1, // Add a fixed border
-      borderColor: "transparent", // Set a transparent border color by default
-    },
-    "&:hover fieldset": {
-      borderColor: "transparent", // Remove the border on hover
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "transparent", // Remove the border on focus
-    },
-  },
-  "& .MuiInputLabel-root": {
-    "&.Mui-focused": {
-      color: "inherit", // Use the default label color on focus
-    },
-  },
-}));
-
-const ChatInput = ({ setopenPicker }) => {
-  const [openActionBtn, setopenActionBtn] = useState(false);
-  return (
-    <StyledTextField
-      fullWidth
-      placeholder="Write a message..."
-      InputProps={{
-        startAdornment: (
-          <Stack sx={{ width: "max-conten" }}>
-            <ActionButtons openActionBtn={openActionBtn} />
-            <InputAdornment>
-              <IconButton
-                onClick={() => {
-                  setopenActionBtn((prev) => !prev);
-                }}
-              >
-                <LinkSimple />
-              </IconButton>
-            </InputAdornment>
-          </Stack>
-        ),
-        endAdornment: (
-          <InputAdornment>
-            <IconButton
-              onClick={() => {
-                setopenPicker((prev) => !prev);
-              }}
-            >
-              <Smiley />
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-    />
-  );
-};
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../redux/slices/app";
+import ChatInput from "./ChatInput";
+import { useSelector } from "react-redux";
 
 function Conversation() {
   const theme = useTheme();
-  // const dispatch = useDispatch();
+  const { sidebar } = useSelector((store) => store.app);
+  const dispatch = useDispatch();
   const [openPicker, setopenPicker] = useState(false);
   return (
     <Box
       sx={{
         height: "100vh",
-        width: { sm: "calc(100vw-740px)", xs: "100%" },
+        width: {
+          sm: sidebar.open ? "calc(100vw-740px)" : "calc(100vw-420px)",
+          xs: "100%",
+        },
         backgroundColor:
           theme.palette.mode === "light" ? "#F0F4FA" : "background.default",
         boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25);",
       }}
     >
-      <Stack
-        // onClick={() => {
-        //   dispatch( ToggleSidebar());
-        // }}
-        height={"100%"}
-        maxHeight={"100vh"}
-        width={"auto"}
-      >
+      <Stack height={"100%"} maxHeight={"100vh"} width={"auto"}>
         <Box
           width={"100%"}
           sx={{
@@ -115,7 +53,14 @@ function Conversation() {
             justifyContent={"space-between"}
             sx={{ width: "100%", height: "100%" }}
           >
-            <Stack direction={"row"} alignItems={"center"} spacing={2}>
+            <Stack
+              onClick={() => {
+                dispatch(toggleSidebar());
+              }}
+              direction={"row"}
+              alignItems={"center"}
+              spacing={2}
+            >
               <Box>
                 <StyledBadge
                   overlap="circular"

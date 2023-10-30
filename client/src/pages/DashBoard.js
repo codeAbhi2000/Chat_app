@@ -4,14 +4,16 @@ import SideBar from '../components/SideBar'
 import { Outlet } from 'react-router-dom'
 import Conversation from '../components/Conversation'
 import Conatct from '../components/Conatct'
+import { useSelector } from 'react-redux'
 
 function DashBoard() {
+  const {sidebar } = useSelector((store)=>store.app)
   return (
     <Stack direction={{sm:'row',xs:'column'}}>
         <SideBar/>
         <Outlet/>
         <Conversation/>
-        {/* <Conatct/> */}
+        {sidebar.open && <Conatct/> }
     </Stack>
   )
 }
