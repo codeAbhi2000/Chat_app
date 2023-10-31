@@ -82,7 +82,7 @@ function Conversation() {
           </Stack>
         </Box>
         <Box flexGrow={1} width={"100%"} overflow={"scroll"} height={"100%"}>
-          <Messages />
+          <Messages menu={true}/>
         </Box>
         <Box
           p={1}

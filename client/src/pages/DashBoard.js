@@ -3,8 +3,10 @@ import { Stack } from '@mui/material'
 import SideBar from '../components/SideBar'
 import { Outlet } from 'react-router-dom'
 import Conversation from '../components/Conversation'
-import Conatct from '../components/Conatct'
+import Contact from '../components/Contact'
 import { useSelector } from 'react-redux'
+
+import SharedMsg from '../components/SharedMsg'
 
 function DashBoard() {
   const {sidebar } = useSelector((store)=>store.app)
@@ -13,7 +15,16 @@ function DashBoard() {
         <SideBar/>
         <Outlet/>
         <Conversation/>
-        {sidebar.open && <Conatct/> }
+        {sidebar.open && (()=>{
+          switch (sidebar.type) {
+            case "CONTACT":
+              return <Contact/>
+            case "SHARED":
+              return <SharedMsg/>
+            default:
+              break;
+          }
+        })() }
     </Stack>
   )
 }

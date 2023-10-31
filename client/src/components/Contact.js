@@ -7,16 +7,28 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 import { useTheme } from "@mui/material";
 import { CaretRight, Prohibit, Trash, XCircle } from "phosphor-react";
 import { useDispatch } from "react-redux";
-import { toggleSidebar } from "../redux/slices/app";
+import { toggleSidebar, updateSidebarType } from "../redux/slices/app";
 import { faker } from "@faker-js/faker";
+import DialogAlert from "./DialogAlert";
 
 function Conatct() {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const [openBlockDlg, setopenBlockDlg] = useState(false)
+  const [openDeleteDlg, setopenDeleteDlg] = useState(false)
+
+  const handleOpenBlockDlg = ()=>{
+    setopenBlockDlg(false)
+  }
+  const handleOpenDeleteDlg = ()=>{
+    setopenDeleteDlg(false)
+  }
+
+
   return (
     <Box sx={{ height: "100vh", width: { sm: 320, xs: "100%" } }}>
       <Stack sx={{ height: "100%", width: "100%" }}>
@@ -86,14 +98,16 @@ function Conatct() {
             justifyContent={"space-between"}
           >
             <Typography variant="subtitle2">Media, Link and Docs</Typography>
-            <Button endIcon={<CaretRight />}>201</Button>
+            <Button
+              onClick={() => {
+                dispatch(updateSidebarType("SHARED"));
+              }}
+              endIcon={<CaretRight />}
+            >
+              201
+            </Button>
           </Stack>
-          <Stack
-            spacing={2}
-            alignItems={"center"}
-            direction={"row"}
-            
-          >
+          <Stack spacing={2} alignItems={"center"} direction={"row"}>
             {[1, 2, 3].map((el, i) => {
               return (
                 <Box sx={{ height: 70, width: 70 }} key={i}>
@@ -115,17 +129,23 @@ function Conatct() {
               <Typography variant="caption">Owl,Parrot,Rabbit,You</Typography>
             </Stack>
           </Stack>
-          <Divider/>
-          <Stack direction={'row'} spacing={2} alignItems={'center'} >
-            <Button variant="outlined" startIcon={<Prohibit/>} fullWidth>
+          <Divider />
+          <Stack direction={"row"} spacing={2} alignItems={"center"}>
+            <Button onClick={()=>{
+                setopenBlockDlg(true)
+            }} variant="outlined" startIcon={<Prohibit />} fullWidth>
               Block
             </Button>
-            <Button variant="outlined" startIcon={<Trash/>} fullWidth>
-              Clear 
+            <Button onClick={()=>{
+              setopenDeleteDlg(true)
+            }} variant="outlined" startIcon={<Trash />} fullWidth>
+              Clear
             </Button>
           </Stack>
         </Stack>
       </Stack>
+      {openBlockDlg && <DialogAlert open={openBlockDlg} handleClose={handleOpenBlockDlg} Msg={"Are you sure,youn want to Block this Contact"}/>}
+      {openDeleteDlg && <DialogAlert open={openDeleteDlg} handleClose={handleOpenDeleteDlg} Msg={"Are you sure,youn want to clear this chat"}/>}
     </Box>
   );
 }

@@ -12,7 +12,7 @@ import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
 import React from "react";
 import { Message_options } from "../assets/data";
 
-function Docmsg({ el }) {
+function Docmsg({ el ,menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -42,12 +42,12 @@ function Docmsg({ el }) {
           </Typography>
         </Stack>
       </Box>
-      <MessageOptions/>
+     {menu && <MessageOptions/>}
     </Stack>
   );
 }
 
-function LinkMsg({ el }) {
+function LinkMsg({ el,menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -89,12 +89,12 @@ function LinkMsg({ el }) {
           </Stack>
         </Stack>
       </Box>
-      <MessageOptions/>
+      {menu && <MessageOptions/>}
     </Stack>
   );
 }
 
-function ReplyMsg({ el }) {
+function ReplyMsg({ el,menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -121,12 +121,12 @@ function ReplyMsg({ el }) {
           </Typography>
         </Stack>
       </Box>
-      <MessageOptions/>
+      {menu && <MessageOptions/>}
     </Stack>
   );
 }
 
-function MediaMsg({ el }) {
+function MediaMsg({ el,menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -148,12 +148,12 @@ function MediaMsg({ el }) {
           {el.message}
         </Typography>
       </Box>
-      <MessageOptions/>
+      {menu && <MessageOptions/>}
     </Stack>
   );
 }
 
-function TextMsg({ el }) {
+function TextMsg({ el,menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -168,7 +168,7 @@ function TextMsg({ el }) {
           {el.message}
         </Typography>
       </Box>
-      <MessageOptions/>
+      {menu && <MessageOptions/>}
     </Stack>
   );
 }
