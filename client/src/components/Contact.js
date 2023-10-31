@@ -35,7 +35,7 @@ function Conatct() {
         <Box
           sx={{
             boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25);",
-            width: "100%",
+            width:{ sm: 320, xs: "100%" },
             backgroundColor:
               theme.palette.mode === "light"
                 ? " #F8FAFF"
@@ -60,17 +60,18 @@ function Conatct() {
           </Stack>
         </Box>
         <Stack
-          alignItems={"center"}
+          
           spacing={3}
           sx={{
             height: "100%",
             position: "relative",
             flexGrow: 1,
             overflowY: "scroll",
+            width:{ sm: 320, xs: "100%" },
           }}
-          p={3}
+          p={2}
         >
-          <Stack alignItems={"center"} direction={"row"} spacing={2}>
+          <Stack alignItems={"center"} direction={"row"} spacing={3}>
             <Avatar
               src={faker.image.avatar()}
               alt="avatar"
@@ -107,7 +108,7 @@ function Conatct() {
               201
             </Button>
           </Stack>
-          <Stack spacing={2} alignItems={"center"} direction={"row"}>
+          <Stack spacing={2} alignItems={"center"} direction={"row"} justifyContent={'center'}>
             {[1, 2, 3].map((el, i) => {
               return (
                 <Box sx={{ height: 70, width: 70 }} key={i}>

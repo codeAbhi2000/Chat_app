@@ -9,12 +9,16 @@ import ChatList from "./components/ChatList";
 import GroupList from "./components/GroupList";
 import Settings from "./components/Settings";
 import Updates from "./components/Updates";
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
 
 function App() {
   return (
     <MyCustomTheme>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Registration/>}/>
         <Route path="/dashboard" element={<DashBoard />}>
           <Route path='chats' element={<ChatList/>}/>
           <Route path="groups" element={<GroupList/>}/>

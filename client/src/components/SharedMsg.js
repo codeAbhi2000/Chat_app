@@ -13,7 +13,7 @@ import { ArrowCircleLeft } from "phosphor-react";
 import { useDispatch } from "react-redux";
 import { toggleSidebar, updateSidebarType } from "../redux/slices/app";
 import { faker } from "@faker-js/faker";
-import { SHARED_Docs,SHARED_Links } from "../assets/data";
+import { SHARED_Docs, SHARED_Links } from "../assets/data";
 import { Docmsg, LinkMsg } from "./MessageTypes";
 
 function SharedMsg() {
@@ -30,7 +30,7 @@ function SharedMsg() {
         <Box
           sx={{
             boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25);",
-            width: "100%",
+            width: { sm: 320, xs: "100%" },
             backgroundColor:
               theme.palette.mode === "light"
                 ? " #F8FAFF"
@@ -41,7 +41,7 @@ function SharedMsg() {
             sx={{ height: "100%", p: 2, width: "100%" }}
             direction={"row"}
             alignItems={"center"}
-            spacing={3}
+            spacing={2}
           >
             <IconButton
               onClick={() => {
@@ -53,12 +53,19 @@ function SharedMsg() {
             <Typography variant="subtitle2">Shared Message</Typography>
           </Stack>
         </Box>
-        <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        <Tabs sx={{px:2,pt:2}} value={value} onChange={handleChange} centered>
-          <Tab label="Media" />
-          <Tab label="Link" />
-          <Tab label="Docs" />
-        </Tabs>
+        <Box
+          sx={{ width: { sm: 320, xs: "100%" }, bgcolor: "background.paper" }}
+        >
+          <Tabs
+            sx={{ px: 2, pt: 2 }}
+            value={value}
+            onChange={handleChange}
+            centered
+          >
+            <Tab label="Media" />
+            <Tab label="Link" />
+            <Tab label="Docs" />
+          </Tabs>
         </Box>
         <Stack
           alignItems={"center"}
@@ -68,27 +75,40 @@ function SharedMsg() {
             position: "relative",
             flexGrow: 1,
             overflowY: "scroll",
-            width:'100%'
+            width:{ sm: 320, xs: "100%" },
           }}
-          p={value=== 0 ?2 :1}
+          p={value === 0 ? 2 : 1}
+          
         >
-            {(()=>{
-                switch (value) {
-                    case 0:
-                       return <Grid container spacing={2}>
-                          {[0,1,2,3,4,5].map((e,i)=>{
-                            return <Grid item xs={2} sm={4} key={i}>
-                                <img src={faker.image.avatar()} alt={faker.name.fullName()} width={"100%"} />
-                            </Grid>
-                          })}
+          {(() => {
+            switch (value) {
+              case 0:
+                return (
+                  <Grid container spacing={2}>
+                    {[0, 1, 2, 3, 4, 5].map((e, i) => {
+                      return (
+                        <Grid item  sm={4} key={i}>
+                          <img
+                            src={faker.image.avatar()}
+                            alt={faker.name.fullName()}
+                            width={"100%"}
+                          />
                         </Grid>
-                    case 1: return SHARED_Links.map((el)=> <Stack alignItems={'center'} p={1} width={'80%'}><LinkMsg el={el}/></Stack>)   
-                
-                    case 2: return SHARED_Docs.map((el)=><Docmsg el={el}/>)
-                    
-                    
-                }
-            })()}
+                      );
+                    })}
+                  </Grid>
+                );
+              case 1:
+                return SHARED_Links.map((el) => (
+                  <Stack alignItems={"center"} p={1} width={"80%"}>
+                    <LinkMsg el={el} />
+                  </Stack>
+                ));
+
+              case 2:
+                return SHARED_Docs.map((el) => <Docmsg el={el} />);
+            }
+          })()}
         </Stack>
       </Stack>
     </Box>
