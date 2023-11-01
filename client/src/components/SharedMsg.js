@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { ArrowCircleLeft } from "phosphor-react";
 import { useDispatch } from "react-redux";
-import { toggleSidebar, updateSidebarType } from "../redux/slices/app";
+import {  updateSidebarType } from "../redux/slices/app";
 import { faker } from "@faker-js/faker";
 import { SHARED_Docs, SHARED_Links } from "../assets/data";
 import { Docmsg, LinkMsg } from "./MessageTypes";
@@ -107,6 +107,8 @@ function SharedMsg() {
 
               case 2:
                 return SHARED_Docs.map((el) => <Docmsg el={el} />);
+
+               default :<></> 
             }
           })()}
         </Stack>

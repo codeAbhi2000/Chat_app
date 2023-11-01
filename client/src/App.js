@@ -11,6 +11,7 @@ import Settings from "./components/Settings";
 import Updates from "./components/Updates";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="groups" element={<GroupList/>}/>
           <Route path="settings" element={<Settings/>}/>
           <Route path='updates' element={<Updates/>}/>
+          <Route path="profile" element={<Profile/>}/>
         </Route>
       </Routes>
     </MyCustomTheme>

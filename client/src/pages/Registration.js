@@ -131,12 +131,12 @@ const Registration = () => {
                 <label htmlFor="profilePicInput">
                   <Button
                     endIcon={<UploadSimple />}
-                    variant="contained"
+                    variant="outlined"
                     component="span"
                     color="primary"
                     sx={{
                       "&:hover": {
-                        backgroundColor: "primary.dark",
+                        backgroundColor: "primary.light",
                       },
                     }}
                   >

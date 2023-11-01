@@ -101,7 +101,7 @@ function Conversation() {
             <Stack width={"100%"}>
               <Box
                 display={openPicker ? "inline" : "none"}
-                sx={{ zIndex: 10, position: "fixed", bottom: 81, right: 80 }}
+                sx={{ zIndex: 10, position: "fixed", bottom:{xs: "10%",sm:'15%'}, right: "6%" }}
               >
                 <Picker data={data} theme={theme.palette.mode} />
               </Box>

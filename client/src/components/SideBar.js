@@ -81,11 +81,7 @@ function SideBar() {
                   borderRadius: 1.5,
                 }}
               >
-                <Stack
-       
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                >
+                <Stack alignItems={"center"} justifyContent={"center"}>
                   <IconButton
                     onClick={() => {
                       handleChange(el.index);
@@ -97,10 +93,7 @@ function SideBar() {
                 </Stack>
               </Box>
             ) : (
-              <Stack
-               alignItems={'center'}
-               justifyContent={'center'}
-              >
+              <Stack alignItems={"center"} justifyContent={"center"}>
                 <IconButton
                   onClick={() => {
                     handleChange(el.index);
@@ -156,15 +149,30 @@ function SideBar() {
               return (
                 <MenuItem>
                   {" "}
-                  <Stack
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                    direction={"row"}
-                    sx={{ width: 100 }}
-                  >
-                    <span>{el.title}</span>
-                    {el.icon}
-                  </Stack>
+                  {el.title === "Profile" ? (
+                    <Stack
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      direction={"row"}
+                      sx={{ width: 100 }}
+                      component={Link}
+                      to={"/dashboard/profile"}
+                    >
+                      <span>{el.title}</span>
+                      {el.icon}
+                    </Stack>
+                  ) : (
+                    <Stack
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      direction={"row"}
+                      sx={{ width: 100 }}
+                      
+                    >
+                      <span>{el.title}</span>
+                      {el.icon}
+                    </Stack>
+                  )}
                 </MenuItem>
               );
             })}

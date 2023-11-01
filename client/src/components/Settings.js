@@ -7,11 +7,18 @@ import {
   Avatar,
   Divider,
 } from "@mui/material";
-import { CaretLeft, Palette, Password, SignOut } from "phosphor-react";
+import {
+  CaretLeft,
+  Palette,
+  Password,
+  SignOut,
+  UserCircle,
+} from "phosphor-react";
 import React from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MaterialUISwitch from "./AntSwitch";
+import { Link } from "react-router-dom";
 
 function Settings() {
   const theme = useTheme();
@@ -30,7 +37,7 @@ function Settings() {
         <Box
           sx={{
             boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25);",
-            width:{ sm: 320, xs: "100%" },
+            width: { sm: 320, xs: "100%" },
             backgroundColor:
               theme.palette.mode === "light"
                 ? " #F8FAFF"
@@ -74,6 +81,17 @@ function Settings() {
           </Stack>
         </Stack>
         <Stack spacing={3} padding={2}>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            spacing={2}
+            component={Link}
+            to="/dashboard/profile"
+          >
+            <UserCircle size={32} />
+            <Typography variant="body2">Profile</Typography>
+          </Stack>
+          <Divider />
           <Stack direction={"row"} alignItems={"center"} spacing={2}>
             <Password size={32} />
             <Typography variant="body2">Change Password</Typography>
