@@ -15,7 +15,7 @@ exports.signup = (req, res, next) => {
     if (err) {
       console.error(err);
       res.status(500).json({ error: "error", msg: "Something went wrong" });
-    } else if (results.length > 0) {
+    } else if (results.length > 0 && !results[0].verified) {
       // res.status(500).json({ error: "error", msg: "User Already Exists" });
       res.locals.uid = results[0]._id;
       next();
@@ -92,7 +92,7 @@ exports.verifyOTP = async (req, res, next) => {
   const { email, otp } = req.body;
   console.log(otp, email);
   User.findByEmail(email, (err, result) => {
-    console.log(result);
+    // console.log(result);
     if (err) {
       res.status(500).json({
         status: "error",
@@ -159,8 +159,13 @@ exports.forgotPassword = async (req, res) => {
   const email = req.body.email;
 
   User.findByEmail(email, (err, user) => {
-    console.log(user);
-    if (user.length === 0) {
+    // console.log(user);
+    if(err){
+      res.status(500).json({
+        msg: "Something went wrong",
+      });
+    }
+    else if (user.length === 0) {
       res.status(404).json({
         msg: "Email does not exists",
       });
@@ -211,9 +216,11 @@ exports.resetPassword = async (req, res, next) => {
           msg:'Somethinf went wrong'
         })
       }
+      
       res.status(200).json({
         status:'success',
-        msg:"Password reset successful"
+        msg:"Password reset successful",
+       
       })
     })
     

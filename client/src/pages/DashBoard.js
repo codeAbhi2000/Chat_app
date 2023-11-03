@@ -8,12 +8,14 @@ import { useSelector } from 'react-redux'
 
 import SharedMsg from '../components/SharedMsg'
 
-const isAuthenticated = true;
+
 
 function DashBoard() {
   const {sidebar } = useSelector((store)=>store.app)
 
-  if(!isAuthenticated){
+  const {isLoggedIn} = useSelector((store)=> store.auth)
+
+  if(!isLoggedIn){
     return <Navigate to={'/login'}/>
   }
 

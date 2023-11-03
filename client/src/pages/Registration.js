@@ -11,15 +11,19 @@ import {
 } from "@mui/material";
 import logo from "../assets/iamges/chatting.png";
 import { Eye,EyeClosed } from "phosphor-react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../redux/slices/auth";
 
 const Registration = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [showPassword, setshowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    
   });
 
   const handleChange = (e) => {
@@ -28,10 +32,25 @@ const Registration = () => {
   };
 
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // You can handle form submission here, e.g., send data to a server or store it in state.
+    if(formData.password!== formData.confirmPassword){
+      alert('Both password should be same')
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      })
+    }
+    await dispatch(registerUser({
+        name:formData.name,
+        email:formData.email,
+        password:formData.password
+    }))
     console.log(formData);
+    navigate('/enterOTP')
   };
 
   return (
@@ -73,6 +92,7 @@ const Registration = () => {
                 fullWidth
                 value={formData.name}
                 onChange={handleChange}
+                required
               />
 
               <TextField
@@ -83,6 +103,7 @@ const Registration = () => {
                 fullWidth
                 value={formData.email}
                 onChange={handleChange}
+                required
               />
 
               <TextField
@@ -90,6 +111,9 @@ const Registration = () => {
                 variant="outlined"
                 label="Password"
                 name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
                 InputProps={{
                   endAdornment: (
                     <InputAdornment>
@@ -113,6 +137,7 @@ const Registration = () => {
                 fullWidth
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                required
               />
 
               

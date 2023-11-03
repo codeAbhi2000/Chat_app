@@ -17,10 +17,12 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Link } from "react-router-dom";
 import { Nav_Buttons, Profile_Menu } from "../assets/data";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../redux/slices/auth";
 
 function SideBar() {
   const theme = useTheme();
-
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -145,9 +147,15 @@ function SideBar() {
           }}
         >
           <Stack spacing={1} px={0.5}>
-            {Profile_Menu.map((el) => {
+            {Profile_Menu.map((el, idx) => {
               return (
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    if (idx === 1) {
+                      dispatch(logoutUser());
+                    }
+                  }}
+                >
                   {" "}
                   {el.title === "Profile" ? (
                     <Stack
@@ -167,7 +175,6 @@ function SideBar() {
                       justifyContent={"space-between"}
                       direction={"row"}
                       sx={{ width: 100 }}
-                      
                     >
                       <span>{el.title}</span>
                       {el.icon}

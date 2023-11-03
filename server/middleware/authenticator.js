@@ -15,7 +15,7 @@ const validator = (req, res, next) => {
       const respnse = jwt.verify(token, myToken);
       if (respnse) {
         // const userId = decoded.userId;
-        const email = decoded.email;
+        const email = respnse.email;
         User.findByEmail(email, (err, result) => {
           if (err) {
             res.status(401).send({ error: "error", msg: "Invalid user" });
