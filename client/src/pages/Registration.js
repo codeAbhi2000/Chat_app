@@ -7,11 +7,10 @@ import {
   IconButton,
   InputAdornment,
   Button,
-  Input,
   Container,
 } from "@mui/material";
 import logo from "../assets/iamges/chatting.png";
-import { UploadSimple,Eye,EyeClosed } from "phosphor-react";
+import { Eye,EyeClosed } from "phosphor-react";
 
 const Registration = () => {
   const [showPassword, setshowPassword] = useState(false);
@@ -20,7 +19,7 @@ const Registration = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    profilePic: null,
+    
   });
 
   const handleChange = (e) => {
@@ -28,11 +27,7 @@ const Registration = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({ ...formData, profilePic: file });
-  };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     // You can handle form submission here, e.g., send data to a server or store it in state.
@@ -59,7 +54,7 @@ const Registration = () => {
           borderRadius: 3,
           border: "1px solid",
         }}
-        height={{ sm: "95vh", xs: "75vh" }}
+        height={{ sm: "90vh", xs: "75vh" }}
       >
         <Stack spacing={3} p={3}>
           <Stack alignItems={"center"} justifyContent={"center"} spacing={2}>
@@ -120,36 +115,7 @@ const Registration = () => {
                 onChange={handleChange}
               />
 
-              <Stack direction="row" spacing={2}>
-                <Input
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id="profilePicInput"
-                  type="file"
-                  onChange={handleProfilePicChange}
-                />
-                <label htmlFor="profilePicInput">
-                  <Button
-                    endIcon={<UploadSimple />}
-                    variant="outlined"
-                    component="span"
-                    color="primary"
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "primary.light",
-                      },
-                    }}
-                  >
-                    Upload Profile Picture
-                  </Button>
-                </label>
-                <Typography variant="body1" sx={{ alignSelf: "center" }}>
-                  {formData.profilePic
-                    ? formData.profilePic.name
-                    : "No file selected"}
-                </Typography>
-              </Stack>
-
+              
               <Button
                 type="submit"
                 variant="contained"
