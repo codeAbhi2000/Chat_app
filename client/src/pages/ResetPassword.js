@@ -14,6 +14,7 @@ import { Eye, EyeClosed } from "phosphor-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetPassowrd } from "../redux/slices/auth";
+import SnackbarAlert from "../components/Snackbar";
 
 
 function ResetPassword() {
@@ -139,6 +140,7 @@ function ResetPassword() {
             </Stack>
           </form>
         </Stack>
+        <SnackbarAlert/>
       </Box>
     </Container>
   );

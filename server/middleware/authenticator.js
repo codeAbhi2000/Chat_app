@@ -6,16 +6,18 @@ const myToken = process.env.JWT_KEY;
 
 const validator = (req, res, next) => {
   const token = req.header("Authorization");
-  // console.log(token)
+  //  console.log(token)
   if (!token) {
     res.status(401).send({ error: "Please authenticate using a valid token" });
     console.log("error in token");
   } else {
     try {
       const respnse = jwt.verify(token, myToken);
+      // console.log(respnse);
       if (respnse) {
         // const userId = decoded.userId;
         const email = respnse.email;
+        // console.log(email);
         User.findByEmail(email, (err, result) => {
           if (err) {
             res.status(401).send({ error: "error", msg: "Invalid user" });
@@ -31,7 +33,7 @@ const validator = (req, res, next) => {
     } catch (error) {
       console.log(error);
       res.status(401).send({ error: "error", msg: "Invalid user" });
-      console.log("it is in catch blllock");
+      console.log("it is in catch block");
     }
   }
 };

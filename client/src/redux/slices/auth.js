@@ -5,7 +5,8 @@ import { openSnackBar } from "./app";
 const initialState = {
     isLoggedIn : false,
     token:'',
-    email:''
+    email:'',
+    uid : null
 }
 
 
@@ -16,10 +17,12 @@ const slice = createSlice({
         login(state,action){
             state.isLoggedIn = action.payload.isLoggedIn
             state.token = action.payload.token
+            state.uid = action.payload.uid
         },
         signOut(state,action){
             state.isLoggedIn = false
             state.token = ''
+            state.uid = null
         },
         updateRegisterUserEmail(state,action){
             state.email = action.payload.email
@@ -41,12 +44,13 @@ export function loginUseer(inputvalues) {
             console.log(res);
             dispatch(slice.actions.login({
                 isLoggedIn : true,
-                token:res.data.token
+                token:res.data.token,
+                uid:res.data.uid
             }))
             dispatch(openSnackBar({severity:'success',message:res.data.msg}))
         }).catch((err)=>{
             console.log(err);
-            dispatch(openSnackBar({severity:'error',message:err.data.msg}))
+            dispatch(openSnackBar({severity:'error',message:err.response.data.msg}))
         })
     }
 }
@@ -70,7 +74,7 @@ export function forgotPassword(inputData) {
             dispatch(openSnackBar({severity:'info',message:res.data.msg}))
         }).catch(err =>{
             console.log(err);
-            dispatch(openSnackBar({severity:'error',message:err.data.msg}))
+            dispatch(openSnackBar({severity:'error',message:err.response.data.msg}))
         })
     }
 }
@@ -91,7 +95,7 @@ export function resetPassowrd(inputData) {
             dispatch(openSnackBar({severity:'success',message:res.data.msg}))
         }).catch(err => {
             console.log(err);
-            dispatch(openSnackBar({severity:'error',message:err.data.msg}))
+            dispatch(openSnackBar({severity:'error',message:err.response.data.msg}))
         })
     }
 }
@@ -112,7 +116,7 @@ export function registerUser(inputData){
             dispatch(openSnackBar({severity:'success',message:res.data.msg}))
         }).catch(err => {
             console.log(err);
-            dispatch(openSnackBar({severity:'error',message:err.data.msg}))
+            dispatch(openSnackBar({severity:'error',message:err.response.data.msg}))
         })
     }
 }
@@ -130,7 +134,10 @@ export function  verifyUser(inputData) {
             dispatch(openSnackBar({severity:'success',message:res.data.msg}))
         }).catch(err =>{
             console.log(err);
-            dispatch(openSnackBar({severity:'error',message:err.data.msg}))
+            dispatch(openSnackBar({severity:'error',message:err.response.data.msg}))
         })
     }
 }
+
+
+

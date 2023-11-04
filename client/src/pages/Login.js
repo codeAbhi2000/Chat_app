@@ -15,6 +15,7 @@ import { Eye, EyeClosed } from "phosphor-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUseer } from "../redux/slices/auth";
+import Snackbar from "../components/Snackbar";
 
 function Login() {
   const navigate = useNavigate()
@@ -39,7 +40,7 @@ function Login() {
   
       // After the login action is completed, navigate to the dashboard
       console.log('Navigating to /dashboard');
-      navigate('/dashboard');
+     return navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
     }
@@ -119,6 +120,7 @@ function Login() {
             </Stack>
           </form>
         </Stack>
+        <Snackbar/>
       </Box>
     </Container>
   );

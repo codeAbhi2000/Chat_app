@@ -1,11 +1,18 @@
-import React from "react";
-import { Box, Stack, Typography, Divider } from "@mui/material";
+import React ,{useState} from "react";
+import { Box, Stack, Typography, Divider, IconButton } from "@mui/material";
 
 import SearchBar from "./SearchBar";
 import { ChatList as List } from "../assets/data";
 import ChartElement from "./ChartElement";
+import { Users } from "phosphor-react";
+import Friends from "./Friends";
 
 function ChatList() {
+  const [openDialog, setopenDialog] = useState(false)
+
+  const handleCloseDialog = ()=>{
+    setopenDialog(false)
+  } 
   return (
     <Box
       sx={{
@@ -17,9 +24,14 @@ function ChatList() {
     >
       <Stack sx={{ maxHeight: "100vh" }}>
         <Stack p={2} spacing={2}>
-          <Box>
+          <Stack alignItems={'center'} justifyContent={'space-between'} direction={'row'} spacing={2}>
             <Typography variant="h4">Chats</Typography>
-          </Box>
+            <IconButton onClick={()=>{
+              setopenDialog(true)
+            }}>
+              <Users/>
+            </IconButton>
+          </Stack>
           <Stack spacing={3}>
             <Box>
               <SearchBar />
@@ -43,6 +55,7 @@ function ChatList() {
           </Stack>
         </Stack>
       </Stack>
+      {openDialog && <Friends open={openDialog} handleClose={handleCloseDialog}/>}
     </Box>
   );
 }

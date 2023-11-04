@@ -12,6 +12,7 @@ import {
   import logo from "../assets/iamges/chatting.png";
 import { useDispatch } from "react-redux";
 import { forgotPassword } from "../redux/slices/auth";
+import SnackbarAlert from "../components/Snackbar";
 
 function ForgotPassword() {
     const dispatch = useDispatch()
@@ -80,6 +81,7 @@ function ForgotPassword() {
             </Stack>
           </form>
         </Stack>
+        <SnackbarAlert/>
       </Box>
     </Container>
   );

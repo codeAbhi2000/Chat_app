@@ -11,6 +11,7 @@ import logo from "../assets/iamges/chatting.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { verifyUser } from "../redux/slices/auth";
+import SnackbarAlert from "../components/Snackbar";
 
 const OTPInput = () => {
     const dispatch = useDispatch()
@@ -133,6 +134,7 @@ const OTPInput = () => {
             </Stack>
           </form>
         </Stack>
+        <SnackbarAlert/>
       </Box>
     </Container>
   );

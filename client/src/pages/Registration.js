@@ -14,6 +14,7 @@ import { Eye,EyeClosed } from "phosphor-react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../redux/slices/auth";
+import SnackbarAlert from "../components/Snackbar";
 
 const Registration = () => {
   const dispatch = useDispatch()
@@ -152,6 +153,7 @@ const Registration = () => {
             </Stack>
           </form>
         </Stack>
+        <SnackbarAlert/>
       </Box>
     </Container>
   );
