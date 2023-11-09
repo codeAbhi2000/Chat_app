@@ -50,7 +50,7 @@ io.on("connection", async (socket) => {
       }
       console.log(res);
       const to_user = res[0];
-      io.to(to_user?.socket_id).emit("new_friend_request", {
+      io.to(to_user.socket_id).emit("new_friend_request", {
         message: "New Friend request is recieved",
       });
     });
@@ -61,7 +61,7 @@ io.on("connection", async (socket) => {
       }
       console.log(res);
       const from_user = res[0];
-      io.to(from_user?.socket_id).emit("request_sent", {
+      io.to(from_user.socket_id).emit("request_sent", {
         message: "Request sent successfully",
       });
     });
@@ -155,7 +155,7 @@ io.on("connection", async (socket) => {
       if(err){
         console.log(err);
       }
-      else if (result[0]?.chat_id === null){
+      else if (result[0].chat_id === null){
           Chating.createChat(data.to,data.from,(err,{chat_id,user2Details})=>{
             if(err){
               console.log(err);
