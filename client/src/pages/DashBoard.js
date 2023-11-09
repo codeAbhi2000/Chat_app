@@ -41,10 +41,10 @@ function DashBoard() {
     // Combine the formatted date and time
     const combinedDateTime = `${formattedDate} ${formattedTime}`;
 
-    return combinedDateTime
+    return combinedDateTime;
   };
 
-  const { conversations, curren_conversation,current_messages } = useSelector(
+  const { conversations, curren_conversation, current_messages } = useSelector(
     (state) => state.conversation.direct_chat
   );
 
@@ -60,56 +60,56 @@ function DashBoard() {
 
     if (!socket) {
       connectSocket(uid);
-      socket.on("new_friend_request", (data) => {
-        dispatch(openSnackBar({ severity: "success", message: data.message }));
-      });
-      socket.on("request_accepted", (data) => {
-        dispatch(openSnackBar({ severity: "success", message: data.message }));
-      });
-      socket.on("request_sent", (data) => {
-        dispatch(openSnackBar({ severity: "success", message: data.message }));
-      });
-      socket.on("start_chat", (data) => {
-        console.log(data);
-        const existing_chats = conversations.find(
-          (el) => el.chat_id === data.chat_id
-        );
-
-        if (existing_chats) {
-          //dispatch for undateconversation
-          dispatch(UpdateConversation({ conversations: data }));
-        } else {
-          //dispatch fro adding the new chat
-          dispatch(AddConversation({ conversations: data }));
-        }
-
-        dispatch(selectChat({ room_id: data.chat_id }));
-      });
-
-      socket.on("new_message", (data) => {
-        console.log("this is neew chat",data);
-        if (curren_conversation.chat_id === data.chat_id ) {
-          dispatch(
-            AddDirectMessage({
-              id: data.message_id,
-              chat_id: data.chat_id,
-              type: data.type,
-              time: createTimeStamp(),
-              message: data.message,
-              incoming: data.to === uid,
-              outgoing: data.from === uid,
-            })
-          );
-        }
-      });
     }
+    socket.on("new_friend_request", (data) => {
+      dispatch(openSnackBar({ severity: "success", message: data.message }));
+    });
+    socket.on("request_accepted", (data) => {
+      dispatch(openSnackBar({ severity: "success", message: data.message }));
+    });
+    socket.on("request_sent", (data) => {
+      dispatch(openSnackBar({ severity: "success", message: data.message }));
+    });
+    socket.on("start_chat", (data) => {
+      console.log(data);
+      const existing_chats = conversations.find(
+        (el) => el.chat_id === data.chat_id
+      );
+
+      if (existing_chats) {
+        //dispatch for undateconversation
+        dispatch(UpdateConversation({ conversations: data }));
+      } else {
+        //dispatch fro adding the new chat
+        dispatch(AddConversation({ conversations: data }));
+      }
+
+      dispatch(selectChat({ room_id: data.chat_id }));
+    });
+
+    socket.on("new_message", (data) => {
+      console.log("this is neew chat", data);
+      if (curren_conversation.chat_id === data.chat_id) {
+        dispatch(
+          AddDirectMessage({
+            id: data.message_id,
+            chat_id: data.chat_id,
+            type: data.type,
+            time: createTimeStamp(),
+            message: data.message,
+            incoming: data.to === uid,
+            outgoing: data.from === uid,
+          })
+        );
+      }
+    });
 
     return () => {
       socket.off("new_friend_request");
       socket.off("request_accepted");
       socket.off("request_sent");
       socket.off("start_chat");
-      socket.off("new_message")
+      socket.off("new_message");
     };
   }, [isLoggedIn, socket]);
 
