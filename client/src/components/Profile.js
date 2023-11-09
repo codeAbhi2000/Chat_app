@@ -85,7 +85,6 @@ function Profile() {
               </FormHelperText>
               <TextField label="About" name="about" />
                 <Stack direction={'row'} justifyContent={'end'}>
-
               <Button variant="outlined" type="submit" size="large">
                 Save
               </Button>

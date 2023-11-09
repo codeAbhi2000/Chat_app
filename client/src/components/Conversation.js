@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   IconButton,
+  Snackbar,
   Stack,
   Typography,
   useTheme,
@@ -207,6 +208,7 @@ function Conversation() {
                     to: current_conversation._id,
                     type: containsUrl(value) ? "Link" : "Text",
                   });
+                  setValue("")
                 }}>
                   <PaperPlaneTilt color="white" />
                 </IconButton>
@@ -215,6 +217,7 @@ function Conversation() {
           </Stack>
         </Box>
       </Stack>
+      <Snackbar/>
     </Box>
   );
 }

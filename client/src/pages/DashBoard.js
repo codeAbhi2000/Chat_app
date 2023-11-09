@@ -101,6 +101,7 @@ function DashBoard() {
             outgoing: data.data.from === uid,
           })
         );
+        dispatch(openSnackBar({severity:"info",message:data.message}))
       }
     });
 
@@ -118,7 +119,7 @@ function DashBoard() {
       <Stack direction={{ sm: "row", xs: "column" }}>
         <SideBar />
         <Outlet />
-        {room_id !== null && chat_type === "individual" ? (
+        {room_id !== null ? (
           <Conversation />
         ) : (
           <Box

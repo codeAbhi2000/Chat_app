@@ -55,7 +55,7 @@ function ChartElement({ chat_id, name, avatar, last_message_time, unread, status
         </Stack>
         <Stack alignItems={"center"} spacing={2}>
           <Typography sx={{ fontWeight: 600 }} variant="caption">
-            {last_message_time.slice(11,16)}
+            {last_message_time?.slice(11,16)}
           </Typography>
           {unread !== '0' ? <Badge color="primary" badgeContent={unread}></Badge> : <></>}
         </Stack>

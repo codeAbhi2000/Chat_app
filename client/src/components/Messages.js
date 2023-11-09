@@ -1,4 +1,4 @@
-import { Stack, Box } from "@mui/material";
+import { Stack, Box, Snackbar } from "@mui/material";
 import React ,{useEffect,useRef} from "react";
 import { Chat_History } from "../assets/data";
 import {
@@ -41,6 +41,7 @@ function Messages({ menu }) {
           }
         })}
       </Stack>
+      <Snackbar/>
     </Box>
   );
 }
