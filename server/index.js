@@ -16,11 +16,6 @@ const io = new Server(server, {
   },
 });
 
-const port = process.env.PORT;
-
-server.listen(port, () => {
-  console.log(`App listening on ${port}`);
-});
 
 io.on("connection", async (socket) => {
   const user_id = socket.handshake.query["user_id"];
@@ -226,3 +221,12 @@ io.on("connection", async (socket) => {
     socket.disconnect(0);
   });
 });
+
+
+const port = process.env.PORT;
+
+server.listen(port, () => {
+  console.log(`App listening on ${port}`);
+});
+
+

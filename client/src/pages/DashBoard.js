@@ -88,17 +88,17 @@ function DashBoard() {
     });
 
     socket.on("new_message", (data) => {
-      console.log("this is neew chat", data);
-      if (curren_conversation.chat_id === data.chat_id) {
+      console.log("this is neew chat", data.chat_id);
+      if (curren_conversation?.chat_id === data.chat_id) {
         dispatch(
           AddDirectMessage({
-            id: data.message_id,
-            chat_id: data.chat_id,
-            type: data.type,
+            id: data.data.message_id,
+            chat_id: data.data.chat_id,
+            type: data.data.type,
             time: createTimeStamp(),
-            message: data.message,
-            incoming: data.to === uid,
-            outgoing: data.from === uid,
+            message: data.data.message,
+            incoming: data.data.to === uid,
+            outgoing: data.data.from === uid,
           })
         );
       }
