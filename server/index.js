@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 const http = require("http");
 const User = require("./models/user");
 const FriendRequests = require("./models/friendRequest");
+const Chating = require('./models/chatting')
 
 const server = http.createServer(app);
 
@@ -29,7 +30,8 @@ io.on("connection", async (socket) => {
   console.log(`User connected ${socket_id}`);
 
   if (Boolean(user_id)) {
-    User.updateSocketId(user_id, socket_id, (err, res) => {
+    
+    User.updateSocketIdAndStatus(user_id, socket_id, 1,(err, res) => {
       if (err) {
         console.log(err);
       }
@@ -40,97 +42,186 @@ io.on("connection", async (socket) => {
 
   socket.on("friend_request", async (data) => {
     console.log(data);
-    const to_user = null;
-    const from_user = null;
 
-    User.findById(data.to, (err, res) => {
+    await User.findById(data.to, (err, res) => {
+      // console.log(res);
       if (err) {
         console.log(err);
       }
       console.log(res);
-      to_user = res.socket_id;
+      const to_user = res[0];
+      io.to(to_user?.socket_id).emit("new_friend_request", {
+        message: "New Friend request is recieved",
+      });
     });
-    User.findById(data.to, (err, res) => {
+    await User.findById(data.from, (err, res) => {
+      // console.log(res);
       if (err) {
         console.log(err);
       }
       console.log(res);
-      from_user = res.socket_id;
+      const from_user = res[0];
+      io.to(from_user?.socket_id).emit("request_sent", {
+        message: "Request sent successfully",
+      });
     });
 
-    FriendRequests.create(data.from, data.to, (err, result) => {
+    await FriendRequests.create(data.from, data.to, (err, result) => {
       if (err) {
         console.log(err);
       }
       console.log(result);
-    });
-
-    io.to(to_user.socket_id).emit("new_friend_request", {
-      message: "New Friend request is recieved",
-    });
-
-    io.to(from_user.socket_id).emit("request_sent", {
-      message: "Request sent successfully",
     });
   });
 
   socket.on("accept_request", (data) => {
     console.log(data);
 
-    const request_doc = null;
     FriendRequests.findById(data.request_id, (err, result) => {
       if (err) {
         console.log(err);
       }
-      request_doc = result;
-    });
-    User.updateFriendList(
-      request_doc.sender.toString(),
-      request_doc.recipient,
-      (err, result) => {
-        if (err) {
-          console.log(err);
-        }
-        console.log(result);
-      }
-    );
-    User.updateFriendList(
-      request_doc.recipient.toString(),
-      request_doc.sender,
-      (err, result) => {
-        if (err) {
-          console.log(err);
+      console.log(result);
+      const request_doc = result[0];
+      User.updateFriendList(
+        request_doc.sender.toString(),
+        request_doc.recipient,
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          }
           console.log(result);
         }
-      }
-    );
+      );
+      User.updateFriendList(
+        request_doc.recipient.toString(),
+        request_doc.sender,
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log(result);
+        }
+      );
+    });
 
+    FriendRequests.findById(data.request_id, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(result);
+      const request_doc = result[0];
+
+      User.findById(request_doc.sender, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        io.to(result[0]?.socket_id).emit("request_accepted", {
+          message: "Friend Request Accepted",
+        });
+      });
+      User.findById(request_doc.recipient, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        io.to(result[0]?.socket_id).emit("request_accepted", {
+          message: "Friend Request Accepted",
+        });
+      });
+    });
     FriendRequests.deleteRequest(data.request_id, (err, result) => {
       if (err) {
         console.log(err);
       }
       console.log(result);
     });
-
-    User.findById(request_doc.sender, (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      io.to(result.socket_id).emit("request_accepted", {
-        message: "Friend Request Accepted",
-      });
-    });
-    User.findById(request_doc.recipient, (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      io.to(result.socket_id).emit("request_accepted", {
-        message: "Friend Request Accepted",
-      });
-    });
   });
 
-  socket.on("end", () => {
+  socket.on("get_direct_conversations",({user_id},callback)=>{
+      console.log(user_id);
+      Chating.getChatParticipants(user_id,(err,result)=>{
+        if(err){
+          console.log(err);
+        }
+        // console.log(result);
+        callback(null,result)
+      })
+  })
+
+  socket.on("start_conversation",(data)=>{
+    console.log(data);
+    Chating.checkForExistingChat(data.from,data.to,(err,result)=>{
+      console.log(result);
+      if(err){
+        console.log(err);
+      }
+      else if (result[0]?.chat_id === null){
+          Chating.createChat(data.to,data.from,(err,{chat_id,user2Details})=>{
+            if(err){
+              console.log(err);
+            }
+            console.log(chat_id);
+            socket.emit("start_chat",{...user2Details,chat_id})
+          })
+      }
+      else{
+        socket.emit("start_chat",result)
+      }
+    })
+  })
+
+  socket.on("get_messages",({user_id,chat_id},callback)=>{
+    console.log(user_id,chat_id);
+    Chating.getConversation(user_id,chat_id,(err,result)=>{
+      if(err){
+        console.log(err);
+      }
+      // console.log(result);
+      callback(null,result)
+    })
+  })
+
+  socket.on("text_message" ,(data)=>{
+    console.log(data);
+
+    const {to,from,chat_id,type,message} = data;
+
+    Chating.sendMessage(chat_id,from,to,type,message,(err,result)=>{
+      if(err){
+        console.log(err);
+      }
+      User.findById(from, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(result[0].socket_id);
+        io.to(result[0]?.socket_id).emit("new_message", {
+         data,
+          message: "New Message",
+        });
+      });
+      User.findById(to, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        io.to(result[0]?.socket_id).emit("new_message", {
+          data,
+          message: "New message",
+        });
+      });
+    })
+  })
+
+  socket.on("end", ({user_id}) => {
+    console.log(user_id);
+    if(user_id){
+      User.updateStatus(user_id,0,(err,result)=>{
+        if(err){
+          console.log(err);
+        }
+        console.log(result);
+      })
+    }
     console.log("Closing connection");
     socket.disconnect(0);
   });

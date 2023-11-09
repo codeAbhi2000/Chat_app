@@ -33,6 +33,7 @@ exports.signup = (req, res, next) => {
               console.log(insertedId);
 
               res.locals.uid = insertedId;
+              req.email = email
               next();
             }
           });
@@ -43,8 +44,9 @@ exports.signup = (req, res, next) => {
 };
 
 exports.sentOtp = (req, res, next) => {
+  const email = req.email
   const id = res.locals.uid;
-  console.log(id);
+  console.log(id,email);
   const otp = otpGenerator.generate(6, {
     upperCaseAlphabets: false,
     lowerCaseAlphabets: false,
@@ -61,25 +63,27 @@ exports.sentOtp = (req, res, next) => {
       });
     }
 
-    //  console.log(result);
+    console.log(result);
   });
   const template = generatOtptmp(otp); // Implement this function
 
   //   console.log(template);
   const mailOptions = {
     from: "abhishekvvet@gmail.com",
-    to: "badigerabhi2000@gmail.com", // Make sure you have the 'email' variable defined
+    to:(email).toString(), // Make sure you have the 'email' variable defined
     subject: "Your OTP for Account Verification",
     html: template,
   };
 
   mailSender.sendMail(mailOptions, (err, info) => {
     if (err) {
-      res.status(500).json({
+      console.log(err);
+      return res.status(500).json({
         status: "error",
         msg: "Something went wrong",
       });
     }
+    console.log(info);
     res.status(200).json({
       status: "success",
       msg: "OTP sent successfully",
@@ -92,13 +96,13 @@ exports.verifyOTP = async (req, res, next) => {
   const { email, otp } = req.body;
   console.log(otp, email);
   User.findByEmail(email, (err, result) => {
-    // console.log(result);
+    console.log(result);
     if (err) {
       res.status(500).json({
         status: "error",
         msg: "Some thing wert wrong",
       });
-    } else if (Date.now() > result[0].otpexpiry) {
+    } else if (Date.now() > result.otpexpiry) {
       res.status(401).json({
         status: "Error",
         msg: "OTP Expired",

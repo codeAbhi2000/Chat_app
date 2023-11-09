@@ -24,10 +24,15 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const ChatInput = ({ setopenPicker }) => {
+const ChatInput = ({ setopenPicker, setValue, value, inputRef }) => {
   const [openActionBtn, setopenActionBtn] = useState(false);
   return (
     <StyledTextField
+    inputRef={inputRef}
+    value={value}
+    onChange={(event) => {
+      setValue(event.target.value);
+    }}
       fullWidth
       placeholder="Write a message..."
       InputProps={{

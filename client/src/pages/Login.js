@@ -13,13 +13,15 @@ import {
 import logo from "../assets/iamges/chatting.png";
 import { Eye, EyeClosed } from "phosphor-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch ,useSelector} from "react-redux";
 import { loginUseer } from "../redux/slices/auth";
 import Snackbar from "../components/Snackbar";
 
 function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const {isLoggedIn} = useSelector((store)=> store.auth)
   const [showPassword, setshowPassword] = useState(false);
 
   const [loginData, setloginData] = useState({
@@ -40,12 +42,14 @@ function Login() {
   
       // After the login action is completed, navigate to the dashboard
       console.log('Navigating to /dashboard');
-     return navigate('/dashboard');
+     
     } catch (error) {
       console.error('Login failed:', error);
     }
 
   }
+
+  if(!isLoggedIn){
   return (
     <Container
       sx={{
@@ -123,7 +127,9 @@ function Login() {
         <Snackbar/>
       </Box>
     </Container>
-  );
+  );}else{
+    return navigate('/dashboard');
+  }
 }
 
 export default Login;

@@ -14,7 +14,9 @@ const initialState = {
   },
   users:[],
   friends:[],
-  requests:[]
+  requests:[],
+  chat_type:null,
+  room_id:null
 };
 
 const slice = createSlice({
@@ -45,6 +47,10 @@ const slice = createSlice({
     },
     updateRequests(state,action){
       state.requests = action.payload.requests
+    },
+    selectConversation(state,action){
+      state.chat_type = "individual"
+      state.room_id = action.payload.room_id
     }
   },
 });
@@ -133,9 +139,16 @@ export function getFriendRequests(){
         }
       }).then((res)=>{
         console.log(res);
-        dispatch(slice.actions.updateRequests({requests:res.data.data}))
+        dispatch(slice.actions.updateRequests({requests:res.data.data ?res.data.data:[] }))
       }).catch(err => {
         console.log(err);
       })
+  }
+}
+
+
+export function selectChat({room_id}) {
+  return (dispatch,getState)=>{
+    dispatch(slice.actions.selectConversation({room_id}))
   }
 }

@@ -6,6 +6,7 @@ const db = mysql.createConnection({
   host: process.env.DN_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  timezone:'Z'
 });
 
 db.connect((err) => {

@@ -17,11 +17,13 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Link } from "react-router-dom";
 import { Nav_Buttons, Profile_Menu } from "../assets/data";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../redux/slices/auth";
+import { socket } from "../socket";
 
 function SideBar() {
   const theme = useTheme();
+  const {uid} = useSelector((state)=>state.auth)
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -153,6 +155,7 @@ function SideBar() {
                   onClick={() => {
                     if (idx === 1) {
                       dispatch(logoutUser());
+                      socket.emit("end",{user_id:uid})
                     }
                   }}
                 >
