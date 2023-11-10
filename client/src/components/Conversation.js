@@ -22,18 +22,32 @@ import { useSelector } from "react-redux";
 import {
   FetchCurrentMessages,
   SetCurrentConversation,
+  SetCurrentGroupChat,
 } from "../redux/slices/conversation";
 import { socket } from "../socket";
+import SnackbarAlert from "./Snackbar";
 
 function Conversation() {
   const theme = useTheme();
-  const { sidebar, room_id } = useSelector((store) => store.app);
-  const {uid} = useSelector((state)=> state.auth)
-  const { conversations ,current_conversation} = useSelector(
+  const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
+  const { uid } = useSelector((state) => state.auth);
+  const { conversations, current_conversation } = useSelector(
     (state) => state.conversation.direct_chat
+  );
+
+  const { group_list, current_group_conversation } = useSelector(
+    (state) => state.conversation.group_chat
   );
   const dispatch = useDispatch();
   const [openPicker, setopenPicker] = useState(false);
+
+  const uint8Array = new Uint8Array(current_group_conversation?.avatar);
+
+  // Convert Uint8Array to a Base64 string
+  const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+
+  // Create a Data URL for an image (assuming it's a PNG image)
+  const dataUrl = `data:image/png;base64,${base64String}`;
 
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
@@ -69,23 +83,29 @@ function Conversation() {
   }
 
   useEffect(() => {
-    let current = conversations.find((el) => el.chat_id === room_id);
+    if (chat_type === "individual") {
+      let current = conversations.find((el) => el.chat_id === room_id);
 
-    console.log("this is current chat", current);
+      console.log("this is current chat", current);
 
-    socket.emit(
-      "get_messages",
-      { user_id: current._id, chat_id: current.chat_id },
-      (err, data) => {
-        if (err) {
-          console.log(err);
+      socket.emit(
+        "get_messages",
+        { user_id: current._id, chat_id: current.chat_id },
+        (err, data) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log("this is from server", data);
+          dispatch(FetchCurrentMessages(data));
         }
-        console.log("this is from server",data);
-        dispatch(FetchCurrentMessages(data));
-      }
-    );
+      );
 
-    dispatch(SetCurrentConversation(current));
+      dispatch(SetCurrentConversation(current));
+    } else {
+      const current_grpchat = group_list.find((el) => el.group_id === room_id);
+
+      dispatch(SetCurrentGroupChat(current_grpchat));
+    }
   }, [room_id]);
 
   return (
@@ -125,18 +145,40 @@ function Conversation() {
               alignItems={"center"}
               spacing={2}
             >
-              <Box>
-                {current_conversation?.status ?<StyledBadge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  variant="dot"
-                >
-                  <Avatar src={current_conversation?.avatar} />
-                </StyledBadge> : <Avatar src={current_conversation?.avatar} /> }
-              </Box>
+              {chat_type === "individual" ? (
+                <Box>
+                  {current_conversation?.status ? (
+                    <StyledBadge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      variant="dot"
+                    >
+                      <Avatar src={current_conversation?.avatar} />
+                    </StyledBadge>
+                  ) : (
+                    <Avatar src={current_conversation?.avatar} />
+                  )}
+                </Box>
+              ) : (
+                <Box>
+                  <Avatar src={dataUrl} />
+                </Box>
+              )}
               <Stack spacing={0.2}>
-                <Typography variant="subtitle2">{current_conversation?.name}</Typography>
-                {current_conversation?.status ? <Typography variant="caption">online</Typography> : <></>} 
+                {chat_type === "individual" ? (
+                  <Typography variant="subtitle2">
+                    {current_conversation?.name}
+                  </Typography>
+                ) : (
+                  <Typography variant="subtitle2">
+                    {current_group_conversation?.group_name}
+                  </Typography>
+                )}
+                {current_conversation?.status ? (
+                  <Typography variant="caption">online</Typography>
+                ) : (
+                  <></>
+                )}
               </Stack>
             </Stack>
 
@@ -200,16 +242,20 @@ function Conversation() {
                 justifyContent={"center"}
                 sx={{ height: "100%", width: "100%" }}
               >
-                <IconButton onClick={()=>{
-                  socket.emit("text_message", {
-                    message: linkify(value),
-                    chat_id: room_id,
-                    from: uid,
-                    to: current_conversation._id,
-                    type: containsUrl(value) ? "Link" : "Text",
-                  });
-                  setValue("")
-                }}>
+                <IconButton
+                  onClick={() => {
+                    chat_type === "individual"
+                      ? socket.emit("text_message", {
+                          message: linkify(value),
+                          chat_id: room_id,
+                          from: uid,
+                          to: current_conversation._id,
+                          type: containsUrl(value) ? "Link" : "Text",
+                        })
+                      : console.log("group message");
+                    setValue("");
+                  }}
+                >
                   <PaperPlaneTilt color="white" />
                 </IconButton>
               </Stack>
@@ -217,7 +263,7 @@ function Conversation() {
           </Stack>
         </Box>
       </Stack>
-      <Snackbar/>
+      <SnackbarAlert />
     </Box>
   );
 }

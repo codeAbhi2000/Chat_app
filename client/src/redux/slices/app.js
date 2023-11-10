@@ -15,6 +15,7 @@ const initialState = {
   users:[],
   friends:[],
   requests:[],
+  allUsers:[],
   chat_type:null,
   room_id:null
 };
@@ -42,6 +43,9 @@ const slice = createSlice({
     updateUsers(state,action){
       state.users = action.payload.users
     },
+    upDateOtherUser(state,action){
+      state.allUsers = action.payload.allUsers
+    },
     updateFriends(state,action){
       state.friends = action.payload.friends
     },
@@ -49,7 +53,7 @@ const slice = createSlice({
       state.requests = action.payload.requests
     },
     selectConversation(state,action){
-      state.chat_type = "individual"
+      state.chat_type = action.payload.chat_type
       state.room_id = action.payload.room_id
     }
   },
@@ -147,8 +151,24 @@ export function getFriendRequests(){
 }
 
 
-export function selectChat({room_id}) {
+export function selectChat({room_id,chat_type}) {
   return (dispatch,getState)=>{
-    dispatch(slice.actions.selectConversation({room_id}))
+    dispatch(slice.actions.selectConversation({room_id,chat_type}))
+  }
+}
+
+export function getAllUsers(){
+  return (dispatch,getState)=>{
+    Axios.get(`http://localhost:5000/user/getAllUsers/${getState().auth.uid}`,{
+      headers:{
+        "Content-Type": 'application/json',
+        Authorization:getState().auth.token
+      }
+    }).then((res)=>{
+      console.log(res);
+      dispatch(slice.actions.upDateOtherUser({allUsers:res.data.data}))
+    }).catch(err=>{
+      console.log(err);
+    })
   }
 }

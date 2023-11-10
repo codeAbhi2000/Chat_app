@@ -15,7 +15,7 @@ function ChartElement({ chat_id, name, avatar, last_message_time, unread, status
   return (
     <Box
       onClick = {()=>{
-        dispatch(selectChat({room_id:chat_id}))
+        dispatch(selectChat({room_id:chat_id , chat_type:"individual"}))
       }}
       sx={{
         width: "100%",

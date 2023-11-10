@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import {
   Box,
   Stack,
@@ -10,16 +10,32 @@ import {
 } from "@mui/material";
 import SearchBar from "./SearchBar";
 import { Plus } from "phosphor-react";
-import ChartElement from "./ChartElement";
+
 import { ChatList as List } from "../assets/data";
 import CreateGrpDialog from "./CreateGrpDialog";
+import GroupChatElement from "./GroupChatElement";
+import { useDispatch, useSelector } from "react-redux";
+import { socket } from "../socket";
+import { FetchGrooupList } from "../redux/slices/conversation";
 
 function GroupList() {
   const theme = useTheme();
+
+  const {uid} = useSelector((state) => state.auth)
+  const {group_list} = useSelector((state)=> state.conversation.group_chat) 
+  const dispatch = useDispatch()
   const [openCreateDlg, setopenCreateDlg] = useState(false)
   const handleOpenBlockDlg = ()=>{
     setopenCreateDlg(false)
   }
+
+  useEffect(() => {
+    socket.emit("get_group_list",{user_id:uid},(err,data)=>{
+      console.log(data);
+      dispatch(FetchGrooupList(data))
+    })
+  }, [])
+  
   return (
     <Box
       sx={{
@@ -58,20 +74,13 @@ function GroupList() {
         </Stack>
         <Divider />
         <Stack sx={{ height: "100%", flexGrow: 1, overflowY: "scroll" }}>
-          <Stack p={2} spacing={3}>
-            <Typography variant="subtitle2" color={"#676667"}>
-              Pinned
-            </Typography>
-            {List.filter((el) => el.pinned).map((el) => {
-              return <ChartElement {...el} key={el.id} />;
-            })}
-          </Stack>
+          
           <Stack p={2} spacing={3}>
             <Typography variant="subtitle2" color={"#676667"}>
               All Groups
             </Typography>
-            {List.filter((el) => !el.pinned).map((el) => {
-              return <ChartElement {...el} />;
+            {group_list?.map((el) => {
+              return <GroupChatElement key={el.group_id} {...el} />;
             })}
           </Stack>
         </Stack>

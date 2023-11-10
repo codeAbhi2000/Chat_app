@@ -126,6 +126,38 @@ function ReplyMsg({ el,menu }) {
   );
 }
 
+function GroupMsg({el,menu}){
+  return (
+    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+      <Box
+        p={1.5}
+        sx={{
+          backgroundColor: el.incoming ? "background.paper" : "primary.main",
+          borderRadius: 1.5,
+          width: "max-conten",
+        }}
+      >
+        <Stack spacing={2}>
+          <Stack
+            alignItems={"center"}
+            spacing={3}
+            p={2}
+            sx={{ backgroundColor: "background.paper", borderRadius: 1.5,borderLeft:"2px solid primary.main" }}
+          >
+            <Typography variant="body2" color={"text"}>
+              {el.from_user_name}
+            </Typography>
+          </Stack>
+          <Typography variant="body2" color={el.incoming ? "text" : "white"}>
+            {el.message}
+          </Typography>
+        </Stack>
+      </Box>
+      {menu && <MessageOptions/>}
+    </Stack>
+  );
+}
+
 function MediaMsg({ el,menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
@@ -233,4 +265,4 @@ const MessageOptions = () => {
   );
 };
 
-export { Timeline, TextMsg, MediaMsg, ReplyMsg, LinkMsg, Docmsg };
+export { Timeline, TextMsg, MediaMsg, ReplyMsg, LinkMsg, Docmsg,GroupMsg };

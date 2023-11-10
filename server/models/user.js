@@ -44,7 +44,7 @@ class User {
 
   static getAllVerifiedUser(uid, callback) {
     const sql =
-      "SELECT name , _id FROM users  WHERE verified = ? AND _id <> ? ";
+      "SELECT name , _id,avatar,status,email FROM users  WHERE verified = ? AND _id <> ? ";
     db.query(sql, [1, uid], callback);
   }
 

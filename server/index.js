@@ -5,7 +5,8 @@ const { Server } = require("socket.io");
 const http = require("http");
 const User = require("./models/user");
 const FriendRequests = require("./models/friendRequest");
-const Chating = require('./models/chatting')
+const Chating = require("./models/chatting");
+const Groups = require("./models/groupChating")
 
 const server = http.createServer(app);
 
@@ -15,7 +16,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
 
 io.on("connection", async (socket) => {
   const user_id = socket.handshake.query["user_id"];
@@ -192,7 +192,7 @@ io.on("connection", async (socket) => {
         console.log(result[0].socket_id);
         io.to(result[0]?.socket_id).emit("new_message", {
          data,
-          message: "New Message",
+          message: "Message sent",
         });
       });
       User.findById(to, (err, result) => {
@@ -203,6 +203,66 @@ io.on("connection", async (socket) => {
           data,
           message: "New message",
         });
+      });
+    })
+  })
+
+
+  //group related events and listeners 
+
+   socket.on("create_group_room", (data) => {
+    console.log(data)
+    // Create a room with the group ID
+    socket.join(data.groupId);
+
+    // Notify the user who created the group
+    User.findById(data.user_id, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(result[0].socket_id);
+        io.to(result[0].socket_id).emit("group_room_created", data.groupId);
+      });
+  });
+
+  socket.on("get_group_list",({user_id},callback)=>{
+    console.log(user_id)
+    Groups.getGroupList(user_id,(err,result)=>{
+      if(err){
+        console.log(err)
+      }
+      console.log(result)
+      callback(null,result)
+    })
+  })
+
+
+  socket.on("get_group_messages",({group_id},callback)=>{
+    Groups.getGroupMessages(group_id,(err,result)=>{
+      if(err){
+        console.log(err)
+      }
+      console.log(result)
+      callback(null,result)
+    })
+  })
+
+  socket.on("group_message",(data)=>{
+    console.log(data)
+
+    const {group_id,message,from_user_id,type} = data
+
+    Groups.addGroupMessages(group_id, from_user_id, type, message,(err,result)=>{
+      if(err){
+        return console.log(err)
+      }
+      console.log(result)
+      User.findById(data.user_id, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(result[0].socket_id);
+        io.to(`group:${group_id}`).emit("new_group_message", {...data, from_user_name:result[0].name }); 
       });
     })
   })
@@ -222,11 +282,8 @@ io.on("connection", async (socket) => {
   });
 });
 
-
 const port = process.env.PORT;
 
 server.listen(port, () => {
   console.log(`App listening on ${port}`);
 });
-
-

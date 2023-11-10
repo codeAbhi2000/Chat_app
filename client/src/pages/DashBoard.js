@@ -15,6 +15,7 @@ import {
   AddDirectMessage,
   UpdateConversation,
 } from "../redux/slices/conversation";
+import SnackbarAlert from "../components/Snackbar";
 
 function DashBoard() {
   const theme = useTheme();
@@ -101,8 +102,12 @@ function DashBoard() {
             outgoing: data.data.from === uid,
           })
         );
-        dispatch(openSnackBar({severity:"info",message:data.message}))
+        dispatch(openSnackBar({ severity: "info", message: data.message }));
       }
+    });
+
+    socket.on("group_room_created", (data) => {
+      dispatch(openSnackBar({ severity: "info", message: "Room created" }));
     });
 
     return () => {
@@ -111,6 +116,7 @@ function DashBoard() {
       socket.off("request_sent");
       socket.off("start_chat");
       socket.off("new_message");
+      socket.off("group_room_created");
     };
   }, [isLoggedIn, socket]);
 
@@ -163,6 +169,7 @@ function DashBoard() {
                 break;
             }
           })()}
+        <SnackbarAlert />
       </Stack>
     );
   } else {
