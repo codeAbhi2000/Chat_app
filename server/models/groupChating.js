@@ -63,7 +63,7 @@ class Group {
   static getGroupMessages(groupId, callback) {
     const sql = `
     SELECT
-    gm.message_id,
+    DISTINCT gm.message_id,
     gm.group_id,
     gm.type,
     gm.from_user_id,

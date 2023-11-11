@@ -145,7 +145,7 @@ function GroupMsg({el,menu}){
             sx={{ backgroundColor: "background.paper", borderRadius: 1.5,borderLeft:"2px solid primary.main" }}
           >
             <Typography variant="body2" color={"text"}>
-              {el.from_user_name}
+              {el.sender_name}
             </Typography>
           </Stack>
           <Typography variant="body2" color={el.incoming ? "text" : "white"}>

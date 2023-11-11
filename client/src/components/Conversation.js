@@ -21,6 +21,7 @@ import ChatInput from "./ChatInput";
 import { useSelector } from "react-redux";
 import {
   FetchCurrentMessages,
+  FetchGroupMessage,
   SetCurrentConversation,
   SetCurrentGroupChat,
 } from "../redux/slices/conversation";
@@ -105,6 +106,17 @@ function Conversation() {
       const current_grpchat = group_list.find((el) => el.group_id === room_id);
 
       dispatch(SetCurrentGroupChat(current_grpchat));
+      socket.emit(
+        "get_group_messages",
+        { group_id: current_grpchat.group_id },
+        (err, data) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log("group messages from sever", data);
+          dispatch(FetchGroupMessage(data));
+        }
+      );
     }
   }, [room_id]);
 
@@ -174,8 +186,12 @@ function Conversation() {
                     {current_group_conversation?.group_name}
                   </Typography>
                 )}
-                {current_conversation?.status ? (
-                  <Typography variant="caption">online</Typography>
+                {chat_type === "individual" ? (
+                  current_conversation?.status ? (
+                    <Typography variant="caption">online</Typography>
+                  ) : (
+                    <></>
+                  )
                 ) : (
                   <></>
                 )}
@@ -252,7 +268,12 @@ function Conversation() {
                           to: current_conversation._id,
                           type: containsUrl(value) ? "Link" : "Text",
                         })
-                      : console.log("group message");
+                      : socket.emit("group_message", {
+                          group_id: current_group_conversation.group_id,
+                          from_user_id: uid,
+                          message: linkify(value),
+                          type: containsUrl(value) ? "Link" : "Text",
+                        });
                     setValue("");
                   }}
                 >

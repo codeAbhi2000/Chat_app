@@ -115,7 +115,7 @@ const slice = createSlice({
           group_id:el.group_id,
           type : el.type,
           from_user_id:el.from_user_id,
-          sender_name:el.from_user_name,
+          sender_name:el.from_user_id === user_id ? "You" :el.from_user_name,
           message:el.message,
           message_time:el.message_time,
           incoming : el.from_user_id !== user_id,

@@ -21,6 +21,8 @@ function Messages({ menu }) {
   const { group_messages } = useSelector(
     (state) => state.conversation.group_chat
   );
+
+  console.log(group_messages);
   const messageListRef = useRef(null);
 
   useEffect(() => {
@@ -48,8 +50,8 @@ function Messages({ menu }) {
             })
           : group_messages.map((el) => {
               switch (el.type) {
-                case "text":
-                  return <GroupMsg {...el} menu={menu} />;
+                case "Text":
+                  return <GroupMsg el={el} menu={menu} />;
 
                 default:
                   break;

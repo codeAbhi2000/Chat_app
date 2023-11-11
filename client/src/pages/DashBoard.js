@@ -13,6 +13,7 @@ import poster from "../assets/iamges/Conversation-pana.png";
 import {
   AddConversation,
   AddDirectMessage,
+  AddGroupMessage,
   UpdateConversation,
 } from "../redux/slices/conversation";
 import SnackbarAlert from "../components/Snackbar";
@@ -47,6 +48,10 @@ function DashBoard() {
 
   const { conversations, curren_conversation, current_messages } = useSelector(
     (state) => state.conversation.direct_chat
+  );
+
+  const { curren_group_converstation } = useSelector(
+    (state) => state.conversation.group_chat
   );
 
   useEffect(() => {
@@ -110,6 +115,26 @@ function DashBoard() {
       dispatch(openSnackBar({ severity: "info", message: "Room created" }));
     });
 
+    socket.on("new_group_message", (data) => {
+      console.log(data);
+      if (data.group_id === curren_group_converstation?.group_id) {
+        dispatch(
+          AddGroupMessage({
+            id: data.message_id,
+            group_id: data.group_id,
+            type: data.type,
+            from_user_id: data.from_user_id,
+            sender_name:data.from_user_id === uid ? "You" : data.from_user_name,
+            message: data.message,
+            message_time: createTimeStamp(),
+            incoming: data.from_user_id !== uid,
+            outgoing: data.from_user_id === uid,
+          })
+        );
+        dispatch(openSnackBar({severity: "info", message: "New Group Message"}))
+      }
+    });
+
     return () => {
       socket.off("new_friend_request");
       socket.off("request_accepted");
@@ -117,6 +142,7 @@ function DashBoard() {
       socket.off("start_chat");
       socket.off("new_message");
       socket.off("group_room_created");
+      socket.off("new_group_message");
     };
   }, [isLoggedIn, socket]);
 

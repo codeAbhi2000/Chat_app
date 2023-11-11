@@ -17,12 +17,17 @@ const io = new Server(server, {
   },
 });
 
+
+
 io.on("connection", async (socket) => {
+
   const user_id = socket.handshake.query["user_id"];
 
   const socket_id = socket.id;
 
   console.log(`User connected ${socket_id}`);
+
+
 
   if (Boolean(user_id)) {
     
@@ -32,6 +37,8 @@ io.on("connection", async (socket) => {
       }
     });
   }
+
+  
 
   //socket event listeners
 
@@ -232,12 +239,16 @@ io.on("connection", async (socket) => {
         console.log(err)
       }
       console.log(result)
+      result.forEach((group) => {
+        socket.join(group.group_id);
+      });
       callback(null,result)
     })
   })
 
 
   socket.on("get_group_messages",({group_id},callback)=>{
+    socket.join(group_id);
     Groups.getGroupMessages(group_id,(err,result)=>{
       if(err){
         console.log(err)
@@ -257,12 +268,12 @@ io.on("connection", async (socket) => {
         return console.log(err)
       }
       console.log(result)
-      User.findById(data.user_id, (err, result) => {
+      User.findById(from_user_id, (err, result) => {
         if (err) {
           console.log(err);
         }
         console.log(result[0].socket_id);
-        io.to(`group:${group_id}`).emit("new_group_message", {...data, from_user_name:result[0].name }); 
+        socket.to(`group:${group_id}`).emit("new_group_message", {...data, from_user_name:result[0].name }); 
       });
     })
   })

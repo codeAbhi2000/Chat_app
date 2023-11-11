@@ -66,7 +66,7 @@ function GroupChatElement({
         </Stack>
         <Stack alignItems={"center"} spacing={2}>
           <Typography sx={{ fontWeight: 600 }} variant="caption">
-            {last_message_time?.slice(9, 16)}
+            {last_message_time?.slice(11, 16)}
           </Typography>
         </Stack>
       </Stack>
