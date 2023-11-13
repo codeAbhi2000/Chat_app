@@ -73,7 +73,7 @@ class Group {
     FROM group_messages gm
     JOIN group_participants gp ON gm.group_id = gp.group_id
     JOIN users u ON gm.from_user_id = u._id
-    WHERE gm.group_id = 1
+    WHERE gm.group_id = ?
     ORDER BY gm.created_at
     `;
     db.query(sql,[groupId],callback)
@@ -82,6 +82,16 @@ class Group {
   static addGroupMessages(group_id, from_user_id, type, text,callback){
     const sql = 'INSERT INTO group_messages (group_id, from_user_id, type, text) VALUES (?, ?, ?, ?)'
     db.query(sql,[group_id, from_user_id, type, text],callback)
+  }
+
+  static getParticipants(group_id,callback){
+    const sql = "SELECT user_id FROM group_participants WHERE group_id = ? "
+    db.query(sql,[group_id],callback)
+  }
+
+  static addParticipant(group_id,user_id,callback){
+    const sql = "INSERT INTO group_participants (group_id,user_id)  VALUES(?,?) "
+    db.query(sql,[group_id,user_id],callback)
   }
 }
 

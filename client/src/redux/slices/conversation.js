@@ -96,7 +96,7 @@ const slice = createSlice({
           group_name: el.group_name,
           tagline: el.tagline,
           avatar: el.icon,
-          last_message: el.las_message,
+          last_message: el.last_message,
           last_message_time: el.last_message_time,
           admin: el.admin,
         };

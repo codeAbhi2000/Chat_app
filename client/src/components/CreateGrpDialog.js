@@ -107,7 +107,7 @@ function CreateGrpDialog({ open, handleClose }) {
       );
         console.log(response);
       socket.emit("create_group_room",{groupId : response.data.grpId,user_id : uid})
-      dispatch(openSnackBar({severity:"info",message:"Group Created Successfully"}))
+     
     } catch (error) {
       console.error(error);
     }

@@ -6,7 +6,7 @@ const http = require("http");
 const User = require("./models/user");
 const FriendRequests = require("./models/friendRequest");
 const Chating = require("./models/chatting");
-const Groups = require("./models/groupChating")
+const Groups = require("./models/groupChating");
 
 const server = http.createServer(app);
 
@@ -17,28 +17,21 @@ const io = new Server(server, {
   },
 });
 
-
-
-io.on("connection", async (socket) => {
-
+/*io.on("connection", async (socket) => {
+  // console.log(socket.rooms);
   const user_id = socket.handshake.query["user_id"];
 
   const socket_id = socket.id;
 
   console.log(`User connected ${socket_id}`);
 
-
-
   if (Boolean(user_id)) {
-    
-    User.updateSocketIdAndStatus(user_id, socket_id, 1,(err, res) => {
+    User.updateSocketIdAndStatus(user_id, socket_id, 1, (err, res) => {
       if (err) {
         console.log(err);
       }
     });
   }
-
-  
 
   //socket event listeners
 
@@ -139,57 +132,59 @@ io.on("connection", async (socket) => {
     });
   });
 
-  socket.on("get_direct_conversations",({user_id},callback)=>{
-      console.log(user_id);
-      Chating.getChatParticipants(user_id,(err,result)=>{
-        if(err){
-          console.log(err);
-        }
-        // console.log(result);
-        callback(null,result)
-      })
-  })
-
-  socket.on("start_conversation",(data)=>{
-    console.log(data);
-    Chating.checkForExistingChat(data.from,data.to,(err,result)=>{
-      console.log(result);
-      if(err){
-        console.log(err);
-      }
-      else if (result[0].chat_id === null){
-          Chating.createChat(data.to,data.from,(err,{chat_id,user2Details})=>{
-            if(err){
-              console.log(err);
-            }
-            console.log(chat_id);
-            socket.emit("start_chat",{...user2Details,chat_id})
-          })
-      }
-      else{
-        socket.emit("start_chat",result)
-      }
-    })
-  })
-
-  socket.on("get_messages",({user_id,chat_id},callback)=>{
-    console.log(user_id,chat_id);
-    Chating.getConversation(user_id,chat_id,(err,result)=>{
-      if(err){
+  socket.on("get_direct_conversations", ({ user_id }, callback) => {
+    console.log(user_id);
+    Chating.getChatParticipants(user_id, (err, result) => {
+      if (err) {
         console.log(err);
       }
       // console.log(result);
-      callback(null,result)
-    })
-  })
+      callback(null, result);
+    });
+  });
 
-  socket.on("text_message" ,(data)=>{
+  socket.on("start_conversation", (data) => {
+    console.log(data);
+    Chating.checkForExistingChat(data.from, data.to, (err, result) => {
+      console.log(result);
+      if (err) {
+        console.log(err);
+      } else if (result[0].chat_id === null) {
+        Chating.createChat(
+          data.to,
+          data.from,
+          (err, { chat_id, user2Details }) => {
+            if (err) {
+              console.log(err);
+            }
+            console.log(chat_id);
+            socket.emit("start_chat", { ...user2Details, chat_id });
+          }
+        );
+      } else {
+        socket.emit("start_chat", result);
+      }
+    });
+  });
+
+  socket.on("get_messages", ({ user_id, chat_id }, callback) => {
+    console.log(user_id, chat_id);
+    Chating.getConversation(user_id, chat_id, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      // console.log(result);
+      callback(null, result);
+    });
+  });
+
+  socket.on("text_message", (data) => {
     console.log(data);
 
-    const {to,from,chat_id,type,message} = data;
+    const { to, from, chat_id, type, message } = data;
 
-    Chating.sendMessage(chat_id,from,to,type,message,(err,result)=>{
-      if(err){
+    Chating.sendMessage(chat_id, from, to, type, message, (err, result) => {
+      if (err) {
         console.log(err);
       }
       User.findById(from, (err, result) => {
@@ -198,7 +193,7 @@ io.on("connection", async (socket) => {
         }
         console.log(result[0].socket_id);
         io.to(result[0]?.socket_id).emit("new_message", {
-         data,
+          data,
           message: "Message sent",
         });
       });
@@ -211,87 +206,170 @@ io.on("connection", async (socket) => {
           message: "New message",
         });
       });
-    })
-  })
+    });
+  });
 
+  //group related events and listeners
 
-  //group related events and listeners 
-
-   socket.on("create_group_room", (data) => {
-    console.log(data)
+  socket.on("create_group_room", (data) => {
+    console.log(data);
     // Create a room with the group ID
     socket.join(data.groupId);
 
     // Notify the user who created the group
     User.findById(data.user_id, (err, result) => {
-        if (err) {
-          console.log(err);
-        }
-        console.log(result[0].socket_id);
-        io.to(result[0].socket_id).emit("group_room_created", data.groupId);
+      if (err) {
+        console.log(err);
+      }
+      console.log(result[0].socket_id);
+      io.to(result[0].socket_id).emit("group_room_created", {
+        group_id:data.groupId,
+        message : "Group Created Successfully"
       });
+    });
+
+    Groups.getParticipants(data.groupId, (err, result) => {
+      if (err) {
+        return console.log(err);
+      }
+      result.forEach((el) => {
+        User.findById(el.user_id, (err, res) => {
+          if(err){
+            return console.log(err);
+          }
+          console.log(res);
+          io.to(res[0].socket_id).emit("added_to_group", {
+            group_id: data.groupId,
+            message: "Your added to some group",
+          });
+        });
+      });
+    });
   });
 
-  socket.on("get_group_list",({user_id},callback)=>{
-    console.log(user_id)
-    Groups.getGroupList(user_id,(err,result)=>{
-      if(err){
-        console.log(err)
+  socket.on("join_to_group", async ({ user_id, group_ids }) => {
+    console.log(user_id, group_ids);
+    group_ids?.forEach(async (group_id) => {
+      // Check if the user is a member of the group
+      const isMember = await userIsMemberOfGroup(user_id, group_id);
+      if (isMember) {
+        // Join the user to the group's room
+        console.log("joining the group room");
+        socket.join(`group:${group_id}`);
       }
-      console.log(result)
-      result.forEach((group) => {
-        socket.join(group.group_id);
-      });
-      callback(null,result)
-    })
-  })
+    });
+  });
 
-
-  socket.on("get_group_messages",({group_id},callback)=>{
-    socket.join(group_id);
-    Groups.getGroupMessages(group_id,(err,result)=>{
-      if(err){
-        console.log(err)
+  socket.on("add_participants", ({ adminId, user_id, group_id }) => {
+    Groups.addParticipant(group_id, user_id, (err, result) => {
+      if (err) {
+        return console.log(err);
       }
-      console.log(result)
-      callback(null,result)
-    })
-  })
-
-  socket.on("group_message",(data)=>{
-    console.log(data)
-
-    const {group_id,message,from_user_id,type} = data
-
-    Groups.addGroupMessages(group_id, from_user_id, type, message,(err,result)=>{
-      if(err){
-        return console.log(err)
-      }
-      console.log(result)
-      User.findById(from_user_id, (err, result) => {
+      console.log(result);
+      User.findById(adminId, (err, result) => {
         if (err) {
-          console.log(err);
+          return console.log(err);
         }
-        console.log(result[0].socket_id);
-        socket.to(`group:${group_id}`).emit("new_group_message", {...data, from_user_name:result[0].name }); 
+        io.to(result[0].socket_id).emit("participant_added", {
+          message: "participant added successfully",
+        });
       });
-    })
-  })
+      User.findById(user_id, (err, result) => {
+        if (err) {
+          return console.log(err);
+        }
+        io.to(result[0].socket_id).emit("added_to_group", {
+          group_id,
+          message: "participant added successfully",
+        });
+      });
+    });
+  });
 
-  socket.on("end", ({user_id}) => {
+  socket.on("get_group_list", ({ user_id }, callback) => {
     console.log(user_id);
-    if(user_id){
-      User.updateStatus(user_id,0,(err,result)=>{
-        if(err){
+    Groups.getGroupList(user_id, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(result);
+      callback(null, result);
+    });
+  });
+
+  socket.on("get_group_messages", ({ group_id }, callback) => {
+   console.log(group_id);
+    Groups.getGroupMessages(group_id, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(result);
+      callback(null, result);
+    });
+  });
+
+  socket.on("group_message", (data) => {
+    console.log(data);
+
+    const { group_id, message, from_user_id, type } = data;
+
+    Groups.addGroupMessages(
+      group_id,
+      from_user_id,
+      type,
+      message,
+      (err, result) => {
+        if (err) {
+          return console.log(err);
+        }
+        console.log(result);
+        User.findById(from_user_id, (err, result) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log(result[0].socket_id);
+          io
+            .to(`group:${group_id}`)
+            .emit("new_group_message", {
+              ...data,
+              from_user_name: result[0].name,
+            });
+        });
+      }
+    );
+  });
+
+  
+
+  socket.on("end", ({ user_id }) => {
+    console.log(user_id);
+    if (user_id) {
+      User.updateStatus(user_id, 0, (err, result) => {
+        if (err) {
           console.log(err);
         }
         console.log(result);
-      })
+      });
     }
     console.log("Closing connection");
     socket.disconnect(0);
   });
-});
+});*/
+
+async function userIsMemberOfGroup(user_id, group_id) {
+  return new Promise((resolve, reject) => {
+    Groups.getParticipants(group_id, (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+
+      const isMember = data.some((el) => el.user_id === user_id);
+      resolve(isMember);
+    });
+  });
+}
+
+
 
 const port = process.env.PORT;
 

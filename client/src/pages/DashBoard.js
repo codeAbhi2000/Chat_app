@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import SharedMsg from "../components/SharedMsg";
 import { connectSocket, socket } from "../socket";
-import { openSnackBar, selectChat } from "../redux/slices/app";
+import { AddGroupIds, openSnackBar, selectChat } from "../redux/slices/app";
 import poster from "../assets/iamges/Conversation-pana.png";
 import {
   AddConversation,
@@ -21,7 +21,7 @@ import SnackbarAlert from "../components/Snackbar";
 function DashBoard() {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
+  const { sidebar, room_id, chat_type,groupsYouIn } = useSelector((store) => store.app);
 
   const { isLoggedIn, uid } = useSelector((store) => store.auth);
 
@@ -67,6 +67,8 @@ function DashBoard() {
     if (!socket) {
       connectSocket(uid);
     }
+    socket.emit("join_to_group",{user_id:uid,group_ids :groupsYouIn})
+
     socket.on("new_friend_request", (data) => {
       dispatch(openSnackBar({ severity: "success", message: data.message }));
     });
@@ -112,8 +114,13 @@ function DashBoard() {
     });
 
     socket.on("group_room_created", (data) => {
-      dispatch(openSnackBar({ severity: "info", message: "Room created" }));
+      dispatch(openSnackBar({ severity: "success", message: data.message }));
+      dispatch(AddGroupIds(data.group_id))
     });
+
+    socket.on("participant_added",(data)=>{
+        dispatch(openSnackBar({severity:'success',message:data.message}))
+    })
 
     socket.on("new_group_message", (data) => {
       console.log(data);
@@ -135,6 +142,14 @@ function DashBoard() {
       }
     });
 
+    socket.on("added_to_group",(data)=>{
+      console.log(data);
+      dispatch(AddGroupIds(data.group_id))
+      dispatch(openSnackBar({severity:'info',message:data.message}))
+    })
+
+
+
     return () => {
       socket.off("new_friend_request");
       socket.off("request_accepted");
@@ -143,6 +158,8 @@ function DashBoard() {
       socket.off("new_message");
       socket.off("group_room_created");
       socket.off("new_group_message");
+      socket.off("added_to_group");
+      socket.off("participant_added");
     };
   }, [isLoggedIn, socket]);
 

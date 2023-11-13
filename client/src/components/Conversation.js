@@ -105,10 +105,12 @@ function Conversation() {
     } else {
       const current_grpchat = group_list.find((el) => el.group_id === room_id);
 
+      console.log(current_grpchat);
+
       dispatch(SetCurrentGroupChat(current_grpchat));
       socket.emit(
         "get_group_messages",
-        { group_id: current_grpchat.group_id },
+        { group_id: current_grpchat?.group_id },
         (err, data) => {
           if (err) {
             console.log(err);
@@ -269,7 +271,7 @@ function Conversation() {
                           type: containsUrl(value) ? "Link" : "Text",
                         })
                       : socket.emit("group_message", {
-                          group_id: current_group_conversation.group_id,
+                          group_id: current_group_conversation?.group_id,
                           from_user_id: uid,
                           message: linkify(value),
                           type: containsUrl(value) ? "Link" : "Text",
