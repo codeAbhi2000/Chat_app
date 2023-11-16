@@ -1,4 +1,5 @@
-import { faker } from "@faker-js/faker";
+import React ,{useContext} from "react";
+
 import {
   Stack,
   Box,
@@ -14,15 +15,30 @@ import {
   SignOut,
   UserCircle,
 } from "phosphor-react";
-import React from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MaterialUISwitch from "./AntSwitch";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ThemeContext from "../context/ThemeContext";
+import {useNavigate} from 'react-router-dom'
 
 function Settings() {
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  const goBack = () => {
+    navigate(-1)
+  }
   const smallScreen = useMediaQuery(theme.breakpoints.up("sm"));
+  const themeContext = useContext(ThemeContext);
+  const {loggedInUser} = useSelector((state)=>state.auth)
+  const makeImageUrl = (avatar) => {
+    const uint8Array = new Uint8Array(avatar);
+    const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+    const dataUrl = `data:image/png;base64,${base64String}`;
+    return dataUrl;
+  };
   return (
     <Box
       sx={{
@@ -50,7 +66,7 @@ function Settings() {
             alignItems={"center"}
             spacing={2}
           >
-            <IconButton>
+            <IconButton onClick={goBack}>
               <CaretLeft />
             </IconButton>
             <Typography variant="h6"> Settings</Typography>
@@ -67,16 +83,16 @@ function Settings() {
           <Box>
             <Avatar
               sx={{ width: 56, height: 56 }}
-              src={faker.image.avatar()}
-              alt={faker.name.fullName()}
+              src={makeImageUrl(loggedInUser?.avatar.data)}
+              alt={loggedInUser?.name}
             />
           </Box>
           <Stack spacing={0.5} alignItems={"center"}>
             <Typography variant="article" fontWeight={600}>
-              {faker.name.fullName()}
+              {loggedInUser?.name}
             </Typography>
             <Typography variant="body2" fontWeight={400}>
-              {faker.random.words()}
+              {loggedInUser?.about}
             </Typography>
           </Stack>
         </Stack>
@@ -97,12 +113,12 @@ function Settings() {
             <Typography variant="body2">Change Password</Typography>
           </Stack>
           <Divider />
-          <Stack direction={"row"} alignItems={"center"} spacing={2}>
+          <Stack direction={"row"} alignItems={"center"} spacing={2} sx={{display :{sm:"none",xs:"flex"}}}>
             <Palette size={32} />
             <Typography variant="body2">Set defult Theme</Typography>
-            <MaterialUISwitch />
+            <MaterialUISwitch onChange={() => themeContext.togglePaletteMode()}/>
           </Stack>
-          <Divider />
+         { !smallScreen ? <Divider /> :  <></>}
           {!smallScreen ? (
             <Stack direction={"row"} alignItems={"center"} spacing={2}>
               <SignOut size={25} />

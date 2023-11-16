@@ -26,6 +26,7 @@ const slice = createSlice({
           name: row.name,
           status: row.status,
           avatar: row.avatar,
+          about:row.about,
           last_msg: row.last_message,
           unread: row.unread_message_count,
           last_message_time: row.last_message_time,
@@ -46,6 +47,7 @@ const slice = createSlice({
               name: new_conversation.name,
               status: new_conversation.status,
               avatar: new_conversation.avatar,
+              about: new_conversation.about,
               last_msg: new_conversation.las_message,
               unread: new_conversation.unread_message_count,
               last_message_time: new_conversation.last_message_time,
@@ -63,6 +65,7 @@ const slice = createSlice({
         name: new_conversation.name,
         status: new_conversation.status,
         avatar: new_conversation.avatar,
+        about: new_conversation.about,
         last_msg: new_conversation.las_message,
         unread: new_conversation.unread_message_count,
         last_message_time: new_conversation.last_message_time,
@@ -98,7 +101,7 @@ const slice = createSlice({
           avatar: el.icon,
           last_message: el.last_message,
           last_message_time: el.last_message_time,
-          admin: el.admin,
+          group_admin: el.group_admin,
         };
       });
       state.group_chat.group_list = new_list

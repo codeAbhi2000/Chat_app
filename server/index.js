@@ -17,7 +17,7 @@ const io = new Server(server, {
   },
 });
 
-/*io.on("connection", async (socket) => {
+io.on("connection", async (socket) => {
   // console.log(socket.rooms);
   const user_id = socket.handshake.query["user_id"];
 
@@ -211,38 +211,52 @@ const io = new Server(server, {
 
   //group related events and listeners
 
-  socket.on("create_group_room", (data) => {
+  socket.on("create_group_room",   (data) => {
     console.log(data);
     // Create a room with the group ID
     socket.join(data.groupId);
 
     // Notify the user who created the group
-    User.findById(data.user_id, (err, result) => {
-      if (err) {
-        console.log(err);
+    User.addGroupsId(data.groupId,data.user_id,(err,reuslt)=>{
+      if(err){
+        return console.log(err);
       }
-      console.log(result[0].socket_id);
-      io.to(result[0].socket_id).emit("group_room_created", {
-        group_id:data.groupId,
-        message : "Group Created Successfully"
+      User.findById(data.user_id, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(result[0].socket_id);
+        console.log("emitting the event");
+        io.to(result[0].socket_id).emit("group_room_created", {
+          group_id:data.groupId,
+          message : "Group Created Successfully"
+        });
       });
-    });
+    })
 
+    console.log("emiting the participants");
     Groups.getParticipants(data.groupId, (err, result) => {
       if (err) {
         return console.log(err);
       }
       result.forEach((el) => {
-        User.findById(el.user_id, (err, res) => {
-          if(err){
-            return console.log(err);
-          }
-          console.log(res);
-          io.to(res[0].socket_id).emit("added_to_group", {
-            group_id: data.groupId,
-            message: "Your added to some group",
-          });
-        });
+        if(el.user_id !== data.user_id){
+          User.addGroupsId(data.groupId,el.user_id,(err,result)=>{
+            if(err){
+              return console.log(err);
+            }
+            User.findById(el.user_id, (err, res) => {
+              if(err){
+                return console.log(err);
+              }
+              console.log(res);
+              io.to(res[0].socket_id).emit("added_to_group", {
+              
+                message: "Your added to some group",
+              });
+            });
+          })
+        }
       });
     });
   });
@@ -251,17 +265,17 @@ const io = new Server(server, {
     console.log(user_id, group_ids);
     group_ids?.forEach(async (group_id) => {
       // Check if the user is a member of the group
-      const isMember = await userIsMemberOfGroup(user_id, group_id);
+      const isMember = await userIsMemberOfGroup(user_id, parseInt(group_id));
       if (isMember) {
         // Join the user to the group's room
         console.log("joining the group room");
-        socket.join(`group:${group_id}`);
+        socket.join(`group:${parseInt(group_id)}`);
       }
     });
   });
 
-  socket.on("add_participants", ({ adminId, user_id, group_id }) => {
-    Groups.addParticipant(group_id, user_id, (err, result) => {
+  socket.on("add_participants", ({ adminId, user_ids, group_id }) => {
+    Groups.addParticipant(group_id, user_ids, (err, result) => {
       if (err) {
         return console.log(err);
       }
@@ -274,15 +288,22 @@ const io = new Server(server, {
           message: "participant added successfully",
         });
       });
-      User.findById(user_id, (err, result) => {
-        if (err) {
-          return console.log(err);
-        }
-        io.to(result[0].socket_id).emit("added_to_group", {
-          group_id,
-          message: "participant added successfully",
-        });
-      });
+      user_ids.forEach((user)=>{
+        User.addGroupsId(group_id,user,(err,result)=>{
+          if(err){
+            return console.log(err);
+          }
+          User.findById(user, (err, result) => {
+            if (err) {
+              return console.log(err);
+            }
+            io.to(result[0].socket_id).emit("added_to_group", {
+             
+              message: "participant added successfully",
+            });
+          });
+        })
+      })
     });
   });
 
@@ -354,7 +375,7 @@ const io = new Server(server, {
     console.log("Closing connection");
     socket.disconnect(0);
   });
-});*/
+});
 
 async function userIsMemberOfGroup(user_id, group_id) {
   return new Promise((resolve, reject) => {

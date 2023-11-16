@@ -40,7 +40,7 @@ class Chatting {
 
   static getChatParticipants(userId, callback) {
     const query = `
-    SELECT p.chat_id,u._id, u.name, u.status, u.avatar, m.text AS last_message, m.created_at AS last_message_time,
+    SELECT p.chat_id,u._id, u.name, u.status, u.about,u.avatar, m.text AS last_message, m.created_at AS last_message_time,
     SUM(CASE WHEN m.read = 0 THEN 1 ELSE 0 END) AS unread_message_count
     FROM users u
     JOIN participants p ON u._id = p.user_id

@@ -17,7 +17,7 @@ class Group {
         grpDetails.grpName,
         grpDetails.tagline,
         grpDetails.iconBuffer,
-        parseInt(grpDetails.admin),
+        grpDetails.jadmin,
       ],
       (createGroupError, createGroupResults) => {
         if (createGroupError) {
@@ -76,22 +76,113 @@ class Group {
     WHERE gm.group_id = ?
     ORDER BY gm.created_at
     `;
-    db.query(sql,[groupId],callback)
+    db.query(sql, [groupId], callback);
   }
 
-  static addGroupMessages(group_id, from_user_id, type, text,callback){
-    const sql = 'INSERT INTO group_messages (group_id, from_user_id, type, text) VALUES (?, ?, ?, ?)'
-    db.query(sql,[group_id, from_user_id, type, text],callback)
+  static addGroupMessages(group_id, from_user_id, type, text, callback) {
+    const sql =
+      "INSERT INTO group_messages (group_id, from_user_id, type, text) VALUES (?, ?, ?, ?)";
+    db.query(sql, [group_id, from_user_id, type, text], callback);
   }
 
-  static getParticipants(group_id,callback){
-    const sql = "SELECT user_id FROM group_participants WHERE group_id = ? "
-    db.query(sql,[group_id],callback)
+  static getParticipants(group_id, callback) {
+    const sql = "SELECT user_id FROM group_participants WHERE group_id = ? ";
+    db.query(sql, [group_id], callback);
   }
 
-  static addParticipant(group_id,user_id,callback){
-    const sql = "INSERT INTO group_participants (group_id,user_id)  VALUES(?,?) "
-    db.query(sql,[group_id,user_id],callback)
+  static getParticipantsDetails(group_id, callback) {
+    const sql = `select u._id ,u.avatar,u.name from  users u left join group_participants g on u._id = g.user_id where g.group_id = ? `;
+    db.query(sql, [group_id], callback);
+  }
+
+  static addParticipant(group_id, user_ids, callback) {
+    const sql = "INSERT INTO group_participants (group_id,user_id)  VALUES(?,?) ";
+     user_ids.forEach((user)=>{
+       db.query(sql,[group_id,user],(err)=>{
+        callback(err,null)
+       })
+     })
+     callback(null,"success")
+  }
+
+  static removeParticipants(group_id, user_id, callback) {
+    const sql =
+      "DELETE FROM group_participants WHERE group_id = ? and user_id = ? ";
+    db.query(sql, [group_id, user_id], callback);
+  }
+
+  static makeAdmin(group_id, user_id, callback) {
+    db.query(
+      "SELECT group_admin FROM my_groups WHERE group_id = ?",
+      [group_id],
+      (error, results) => {
+        if (error) {
+          // Handle the error
+          callback(error, null);
+        } else {
+          // Parse the existing JSON array
+          const existingAdminArray = results[0].group_admin;
+
+          // Check if userId is not already in the array to avoid duplicates
+          if (!existingAdminArray.includes(user_id.toString())) {
+            // Insert the userId into the array
+            existingAdminArray.push(user_id.toString());
+
+            // Update the group_admin in the database
+            db.query(
+              "UPDATE my_groups SET group_admin = ? WHERE group_id = ?",
+              [JSON.stringify(existingAdminArray), group_id],
+              (updateError, result) => {
+                if (updateError) {
+                  // Handle the update error
+                  callback(updateError, null);
+                } else {
+                  // The userId has been inserted into the group_admin array
+                  callback(null, result);
+                }
+              }
+            );
+          } else {
+            // The userId is already in the array, handle accordingly
+            callback("error", null);
+          }
+        }
+      }
+    );
+  }
+
+  static removeFromAdmin(group_id,user_id,callback){
+    db.query('SELECT group_admin FROM my_groups WHERE group_id = ?', [group_id], (error, results) => {
+      if (error) {
+        // Handle the error
+        callback(error,null)
+      } else {
+        // Parse the existing JSON array
+        const existingAdminArray = (results[0].group_admin);
+    
+        // Check if userId is in the array
+        const userIdIndex = existingAdminArray.indexOf(user_id.toString());
+    
+        if (userIdIndex !== -1) {
+          // Remove userId from the array
+          existingAdminArray.splice(userIdIndex, 1);
+    
+          // Update the group_admin in the database
+          db.query('UPDATE my_groups SET group_admin = ? WHERE group_id = ?', [JSON.stringify(existingAdminArray), group_id], (updateError,result) => {
+            if (updateError) {
+              // Handle the update error
+              callback(updateError,null)
+            } else {
+              // The userId has been removed from the group_admin array
+              callback(null,result)
+            }
+          });
+        } else {
+          // userId is not in the array, handle accordingly
+          callback("error",null)
+        }
+      }
+    });
   }
 }
 

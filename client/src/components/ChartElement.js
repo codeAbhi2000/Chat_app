@@ -5,6 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectChat } from "../redux/slices/app";
 
 function ChartElement({ chat_id, name, avatar, last_message_time, unread, status,last_msg,_id}) {
+  const makeImageUrl = (avatar) => {
+    const uint8Array = new Uint8Array(avatar);
+    const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+    const dataUrl = `data:image/png;base64,${base64String}`;
+    return dataUrl;
+  };
 
   const { room_id} = useSelector((state)=>state.app)
   const dispatch = useDispatch()
@@ -43,10 +49,10 @@ function ChartElement({ chat_id, name, avatar, last_message_time, unread, status
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
             >
-              <Avatar src={avatar} />
+              <Avatar src={makeImageUrl(avatar)} />
             </StyledBadge>
           ) : (
-            <Avatar src={avatar} />
+            <Avatar src={makeImageUrl(avatar)} />
           )}
           <Stack spacing={1}>
             <Typography variant="subtitle2">{name}</Typography>

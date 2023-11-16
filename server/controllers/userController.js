@@ -82,3 +82,29 @@ exports.createRequest = (req,res,next)=>{
           });
     })
 }
+
+exports.updateProfile = (req,res,next)=>{
+  const {name,about,uid} = req.body
+
+  const profiLePic = req.files ? req.files.profilePic : null;
+
+  const profilePicData = profiLePic?.data
+
+  console.log(name,about,uid,profiLePic);
+  
+
+  User.updateProfile(profilePicData,about,name,uid,(err,result)=>{
+    if (err) {
+      res.status(400).json({
+        status: "error",
+        msg: "Something went wrong",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      msg: 'Profile Updated successfully'
+    });
+  })
+
+}

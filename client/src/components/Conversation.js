@@ -42,13 +42,12 @@ function Conversation() {
   const dispatch = useDispatch();
   const [openPicker, setopenPicker] = useState(false);
 
-  const uint8Array = new Uint8Array(current_group_conversation?.avatar);
-
-  // Convert Uint8Array to a Base64 string
-  const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-
-  // Create a Data URL for an image (assuming it's a PNG image)
-  const dataUrl = `data:image/png;base64,${base64String}`;
+  const makeImageUrl = (avatar) => {
+    const uint8Array = new Uint8Array(avatar);
+    const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+    const dataUrl = `data:image/png;base64,${base64String}`;
+    return dataUrl;
+  };
 
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
@@ -167,15 +166,15 @@ function Conversation() {
                       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                       variant="dot"
                     >
-                      <Avatar src={current_conversation?.avatar} />
+                      <Avatar src={makeImageUrl(current_conversation?.avatar.data)} />
                     </StyledBadge>
                   ) : (
-                    <Avatar src={current_conversation?.avatar} />
+                    <Avatar src={makeImageUrl(current_conversation?.avatar)} />
                   )}
                 </Box>
               ) : (
                 <Box>
-                  <Avatar src={dataUrl} />
+                  <Avatar src={makeImageUrl(current_group_conversation?.avatar)} />
                 </Box>
               )}
               <Stack spacing={0.2}>

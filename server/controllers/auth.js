@@ -152,7 +152,7 @@ exports.login = (req, res) => {
             secretKey,
             { expiresIn: "1h" }
           );
-          res.status(200).json({ token, msg: "Logged in successfull",uid:user._id });
+          res.status(200).json({ token, msg: "Logged in successfull",uid:user._id ,profile:{...user}});
         }
       });
     }

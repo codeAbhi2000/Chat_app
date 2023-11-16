@@ -66,6 +66,51 @@ class User {
       "UPDATE users SET friends = JSON_ARRAY_APPEND(friends, '$', ?) WHERE _id = ? ";
     db.query(sql, [fid, uid], callback);
   }
+
+  static updateProfile(avatar,about,name,uid,callback){
+    const sql = `UPDATE users SET avatar = ? ,about = ? ,name = ? WHERE _id = ?`
+    db.query(sql,[avatar,about,name,uid],callback)
+  }
+
+  static addGroupsId(group_id,user_id,callback){
+    db.query(
+      "SELECT groupsIn FROM users WHERE _id = ?",
+      [user_id],
+      (error, results) => {
+        if (error) {
+          // Handle the error
+          callback(error, null);
+        } else {
+          // Parse the existing JSON array
+          const existingAdminArray = results[0].group_admin;
+
+          // Check if userId is not already in the array to avoid duplicates
+          if (!existingAdminArray?.includes(group_id.toString())) {
+            // Insert the userId into the array
+            existingAdminArray.push(group_id.toString());
+
+            // Update the group_admin in the database
+            db.query(
+              "UPDATE users SET groupsIn = ? WHERE user_id = ?",
+              [JSON.stringify(existingAdminArray), user_id],
+              (updateError, result) => {
+                if (updateError) {
+                  // Handle the update error
+                  callback(updateError, null);
+                } else {
+                  // The userId has been inserted into the group_admin array
+                  callback(null, result);
+                }
+              }
+            );
+          } else {
+            // The userId is already in the array, handle accordingly
+            callback("error", null);
+          }
+        }
+      }
+    );
+  }
 }
 
 module.exports = User;

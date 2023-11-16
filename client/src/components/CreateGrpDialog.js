@@ -43,12 +43,12 @@ function CreateGrpDialog({ open, handleClose }) {
     setDOpen(false);
   };
 
-  const { uid } = useSelector((state) => state.auth);
+  const { uid,token } = useSelector((state) => state.auth);
   const [groupData, setGroupData] = useState({
     grpName: "",
     tagline: "",
     icon: null,
-    admin: uid,
+    admin: [uid],
     members: [uid], // Add a state for members
   });
 
@@ -102,6 +102,7 @@ function CreateGrpDialog({ open, handleClose }) {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization : token
           },
         }
       );
@@ -114,6 +115,7 @@ function CreateGrpDialog({ open, handleClose }) {
   };
 
   useEffect(() => {
+    if(allUsers.length === 0)
     dispatch(getAllUsers());
   }, []);
 

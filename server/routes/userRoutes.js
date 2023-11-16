@@ -9,5 +9,6 @@ router.get('/getOtherUsers/:id',validator,userController.getAllOtherVerifiedUser
 router.get('/getAllUsers/:id',validator,userController.getAllVerifiedUsers)
 router.get('/getFriends/:id',validator,userController.getFriends)
 router.get('/getFriendRequests/:id',validator,userController.getRequests)
+router.post('/updateProfile',validator,userController.updateProfile)
 
 module.exports = router

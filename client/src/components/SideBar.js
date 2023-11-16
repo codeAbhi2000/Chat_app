@@ -23,13 +23,21 @@ import { socket } from "../socket";
 
 function SideBar() {
   const theme = useTheme();
-  const {uid} = useSelector((state)=>state.auth)
+  const {uid,loggedInUser} = useSelector((state)=>state.auth)
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const makeImageUrl = (avatar) => {
+    const uint8Array = new Uint8Array(avatar);
+    const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+    const dataUrl = `data:image/png;base64,${base64String}`;
+    return dataUrl;
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -131,7 +139,7 @@ function SideBar() {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
-          src={faker.image.avatar()}
+          src={makeImageUrl(loggedInUser?.avatar.data)}
         />
         <Menu
           id="demo-positioned-menu"

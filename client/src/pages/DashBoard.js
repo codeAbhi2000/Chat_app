@@ -21,7 +21,8 @@ import SnackbarAlert from "../components/Snackbar";
 function DashBoard() {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { sidebar, room_id, chat_type,groupsYouIn } = useSelector((store) => store.app);
+  const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
+  const { groupsYouIn} = useSelector((state)=>state.auth)
 
   const { isLoggedIn, uid } = useSelector((store) => store.auth);
 
@@ -67,6 +68,8 @@ function DashBoard() {
     if (!socket) {
       connectSocket(uid);
     }
+
+    console.log(groupsYouIn);
     socket.emit("join_to_group",{user_id:uid,group_ids :groupsYouIn})
 
     socket.on("new_friend_request", (data) => {
@@ -114,8 +117,9 @@ function DashBoard() {
     });
 
     socket.on("group_room_created", (data) => {
-      dispatch(openSnackBar({ severity: "success", message: data.message }));
+      console.log("after crating the group",data);
       dispatch(AddGroupIds(data.group_id))
+      dispatch(openSnackBar({ severity: "success", message: data.message }));
     });
 
     socket.on("participant_added",(data)=>{
@@ -143,8 +147,6 @@ function DashBoard() {
     });
 
     socket.on("added_to_group",(data)=>{
-      console.log(data);
-      dispatch(AddGroupIds(data.group_id))
       dispatch(openSnackBar({severity:'info',message:data.message}))
     })
 

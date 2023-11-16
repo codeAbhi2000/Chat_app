@@ -16,7 +16,7 @@ const initialState = {
   friends:[],
   requests:[],
   allUsers:[],
-  groupsYouIn:[5],
+  
   chat_type:null,
   room_id:null
 };
@@ -57,9 +57,7 @@ const slice = createSlice({
       state.chat_type = action.payload.chat_type
       state.room_id = action.payload.room_id
     },
-    addGroupIds(state,action){
-      state.groupsYouIn.push(action.payload.group_id)
-    }
+    
   },
 });
 
