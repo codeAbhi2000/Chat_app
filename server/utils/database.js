@@ -13,6 +13,7 @@ db.connect((err) => {
   if (!err) {
     console.log("Connected to database");
   } else {
+    console.log(err);
     console.log("Connection failed");
   }
 });
