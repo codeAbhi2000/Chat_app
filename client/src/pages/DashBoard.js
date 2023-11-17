@@ -22,7 +22,7 @@ function DashBoard() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
-  const { groupsYouIn} = useSelector((state)=>state.auth)
+  const { groupsYouIn } = useSelector((state) => state.auth);
 
   const { isLoggedIn, uid } = useSelector((store) => store.auth);
 
@@ -69,88 +69,93 @@ function DashBoard() {
       connectSocket(uid);
     }
 
-    console.log(groupsYouIn);
-    socket.emit("join_to_group",{user_id:uid,group_ids :groupsYouIn})
+    // console.log(groupsYouIn);
+    try {
+      socket.emit("join_to_group", { user_id: uid, group_ids: groupsYouIn });
 
-    socket.on("new_friend_request", (data) => {
-      dispatch(openSnackBar({ severity: "success", message: data.message }));
-    });
-    socket.on("request_accepted", (data) => {
-      dispatch(openSnackBar({ severity: "success", message: data.message }));
-    });
-    socket.on("request_sent", (data) => {
-      dispatch(openSnackBar({ severity: "success", message: data.message }));
-    });
-    socket.on("start_chat", (data) => {
-      console.log(data);
-      const existing_chats = conversations.find(
-        (el) => el.chat_id === data.chat_id
-      );
-
-      if (existing_chats) {
-        //dispatch for undateconversation
-        dispatch(UpdateConversation({ conversations: data }));
-      } else {
-        //dispatch fro adding the new chat
-        dispatch(AddConversation({ conversations: data }));
-      }
-
-      dispatch(selectChat({ room_id: data.chat_id }));
-    });
-
-    socket.on("new_message", (data) => {
-      console.log("this is neew chat", data.chat_id);
-      if (curren_conversation?.chat_id === data.chat_id) {
-        dispatch(
-          AddDirectMessage({
-            id: data.data.message_id,
-            chat_id: data.data.chat_id,
-            type: data.data.type,
-            time: createTimeStamp(),
-            message: data.data.message,
-            incoming: data.data.to === uid,
-            outgoing: data.data.from === uid,
-          })
+      socket.on("new_friend_request", (data) => {
+        dispatch(openSnackBar({ severity: "success", message: data.message }));
+      });
+      socket.on("request_accepted", (data) => {
+        dispatch(openSnackBar({ severity: "success", message: data.message }));
+      });
+      socket.on("request_sent", (data) => {
+        dispatch(openSnackBar({ severity: "success", message: data.message }));
+      });
+      socket.on("start_chat", (data) => {
+        console.log(data);
+        const existing_chats = conversations.find(
+          (el) => el.chat_id === data.chat_id
         );
+
+        if (existing_chats) {
+          //dispatch for undateconversation
+          dispatch(UpdateConversation({ conversations: data }));
+        } else {
+          //dispatch fro adding the new chat
+          dispatch(AddConversation({ conversations: data }));
+        }
+
+        dispatch(selectChat({ room_id: data.chat_id }));
+      });
+
+      socket.on("new_message", (data) => {
+        console.log("this is neew chat", data.chat_id);
+        if (curren_conversation?.chat_id === data.chat_id) {
+          dispatch(
+            AddDirectMessage({
+              id: data.data.message_id,
+              chat_id: data.data.chat_id,
+              type: data.data.type,
+              time: createTimeStamp(),
+              message: data.data.message,
+              incoming: data.data.to === uid,
+              outgoing: data.data.from === uid,
+            })
+          );
+          dispatch(openSnackBar({ severity: "info", message: data.message }));
+        }
+      });
+
+      socket.on("group_room_created", (data) => {
+        console.log("after crating the group", data);
+       
+        dispatch(openSnackBar({ severity: "success", message: data.message }));
+      });
+
+      socket.on("participant_added", (data) => {
+        dispatch(openSnackBar({ severity: "success", message: data.message }));
+      });
+
+      socket.on("new_group_message", (data) => {
+        console.log(data);
+        if (data.group_id === curren_group_converstation?.group_id) {
+          dispatch(
+            AddGroupMessage({
+              id: data.message_id,
+              group_id: data.group_id,
+              type: data.type,
+              from_user_id: data.from_user_id,
+              sender_name:
+                data.from_user_id === uid ? "You" : data.from_user_name,
+              message: data.message,
+              message_time: createTimeStamp(),
+              incoming: data.from_user_id !== uid,
+              outgoing: data.from_user_id === uid,
+            })
+          );
+          dispatch(
+            openSnackBar({ severity: "info", message: "New Group Message" })
+          );
+        }
+      });
+
+      socket.on("added_to_group", (data) => {
         dispatch(openSnackBar({ severity: "info", message: data.message }));
-      }
-    });
-
-    socket.on("group_room_created", (data) => {
-      console.log("after crating the group",data);
-      dispatch(AddGroupIds(data.group_id))
-      dispatch(openSnackBar({ severity: "success", message: data.message }));
-    });
-
-    socket.on("participant_added",(data)=>{
-        dispatch(openSnackBar({severity:'success',message:data.message}))
-    })
-
-    socket.on("new_group_message", (data) => {
-      console.log(data);
-      if (data.group_id === curren_group_converstation?.group_id) {
-        dispatch(
-          AddGroupMessage({
-            id: data.message_id,
-            group_id: data.group_id,
-            type: data.type,
-            from_user_id: data.from_user_id,
-            sender_name:data.from_user_id === uid ? "You" : data.from_user_name,
-            message: data.message,
-            message_time: createTimeStamp(),
-            incoming: data.from_user_id !== uid,
-            outgoing: data.from_user_id === uid,
-          })
-        );
-        dispatch(openSnackBar({severity: "info", message: "New Group Message"}))
-      }
-    });
-
-    socket.on("added_to_group",(data)=>{
-      dispatch(openSnackBar({severity:'info',message:data.message}))
-    })
-
-
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
     return () => {
       socket.off("new_friend_request");

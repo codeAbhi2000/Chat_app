@@ -139,7 +139,7 @@ function SideBar() {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
-          src={makeImageUrl(loggedInUser?.avatar.data)}
+          src={makeImageUrl(loggedInUser?.avatar?.data)}
         />
         <Menu
           id="demo-positioned-menu"

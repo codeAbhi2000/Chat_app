@@ -42,6 +42,7 @@ const ImageDialog = ({ open, handleClose,handleFileChange }) => {
               required
               onChange={handleFileChange}
             />
+            <FormHelperText>The image size should be within 20kb</FormHelperText>
           </Stack>
           <Stack direction={'row'} alignItems={'center'}>
               <Button variant="outlined" onClick={handleClose}>Close</Button>
@@ -172,7 +173,7 @@ function Profile() {
           >
             <Avatar
               sx={{ width: 121, height: 121 }}
-              src={makeImageUrl(Profiledata?.profilePic.data)}
+              src={makeImageUrl(Profiledata?.profilePic?.data)}
               alt={Profiledata?.name}
             />
           </Badge>

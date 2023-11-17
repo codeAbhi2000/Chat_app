@@ -95,7 +95,7 @@ exports.updateProfile = (req,res,next)=>{
 
   User.updateProfile(profilePicData,about,name,uid,(err,result)=>{
     if (err) {
-      res.status(400).json({
+     return  res.status(400).json({
         status: "error",
         msg: "Something went wrong",
       });

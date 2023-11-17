@@ -87,11 +87,11 @@ class User {
           // Check if userId is not already in the array to avoid duplicates
           if (!existingAdminArray?.includes(group_id.toString())) {
             // Insert the userId into the array
-            existingAdminArray.push(group_id.toString());
+            existingAdminArray?.push(group_id.toString());
 
             // Update the group_admin in the database
             db.query(
-              "UPDATE users SET groupsIn = ? WHERE user_id = ?",
+              "UPDATE users SET groupsIn = ? WHERE _id = ?",
               [JSON.stringify(existingAdminArray), user_id],
               (updateError, result) => {
                 if (updateError) {

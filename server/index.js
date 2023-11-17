@@ -265,6 +265,7 @@ io.on("connection", async (socket) => {
     console.log(user_id, group_ids);
     group_ids?.forEach(async (group_id) => {
       // Check if the user is a member of the group
+      console.log(group_id);
       const isMember = await userIsMemberOfGroup(user_id, parseInt(group_id));
       if (isMember) {
         // Join the user to the group's room

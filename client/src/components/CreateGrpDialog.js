@@ -14,6 +14,7 @@ import {
   DialogActions,
   DialogTitle,
   DialogContentText,
+  FormHelperText,
 } from "@mui/material";
 import { PlusCircle, XCircle } from "phosphor-react";
 import { faker } from "@faker-js/faker";
@@ -173,6 +174,7 @@ function CreateGrpDialog({ open, handleClose }) {
                     required
                     onChange={handleFileChange}
                   />
+                  <FormHelperText>the image size should be within 20kb</FormHelperText>
                   <Stack spacing={1}>
                     <Stack
                       direction={"row"}

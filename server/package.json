@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
-    "start-server": "nodemon index.js"
+    "start-server": "nodemon index.js",
+    "build":"npm i"
   },
   "author": "Abhishek",
   "license": "ISC",
