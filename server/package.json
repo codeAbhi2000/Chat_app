@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
     "start-server": "nodemon index.js",
-    "build":"npm i"
+    "build": "npm i"
   },
   "author": "Abhishek",
   "license": "ISC",
@@ -21,7 +21,7 @@
     "express-fileupload": "^1.4.2",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.6.2",
+    "mysql2": "^3.6.3",
     "nodemailer": "^6.9.7",
     "nodemon": "^3.0.1",
     "otp-generator": "^4.0.1",
