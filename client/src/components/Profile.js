@@ -16,38 +16,42 @@ import {
 import { Camera, CaretLeft } from "phosphor-react";
 import { faker } from "@faker-js/faker";
 import { useDispatch, useSelector } from "react-redux";
-import Axios from 'axios'
+import Axios from "axios";
 import { openSnackBar } from "../redux/slices/app";
 
-const ImageDialog = ({ open, handleClose,handleFileChange }) => {
+const ImageDialog = ({ open, handleClose, handleFileChange }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         <Box width={320}>
-        <Stack spacing={2} p={2}>
-        <Typography variant="body1">Select Profile pic</Typography>
-          <Stack alignItems={"center"}>
-            <TextField
-              label="Upload image"
-              type="file"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              InputProps={{
-                inputProps: {
-                  accept: "image/jpeg, image/png",
-                },
-              }}
-              name="profilePic"
-              required
-              onChange={handleFileChange}
-            />
-            <FormHelperText>The image size should be within 20kb</FormHelperText>
+          <Stack spacing={2} p={2}>
+            <Typography variant="body1">Select Profile pic</Typography>
+            <Stack alignItems={"center"}>
+              <TextField
+                label="Upload image"
+                type="file"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  inputProps: {
+                    accept: "image/jpeg, image/png",
+                  },
+                }}
+                name="profilePic"
+                required
+                onChange={handleFileChange}
+              />
+              <FormHelperText>
+                The image size should be within 20kb
+              </FormHelperText>
+            </Stack>
+            <Stack direction={"row"} alignItems={"center"}>
+              <Button variant="outlined" onClick={handleClose}>
+                Close
+              </Button>
+            </Stack>
           </Stack>
-          <Stack direction={'row'} alignItems={'center'}>
-              <Button variant="outlined" onClick={handleClose}>Close</Button>
-          </Stack>
-        </Stack>
         </Box>
       </DialogContent>
     </Dialog>
@@ -55,8 +59,8 @@ const ImageDialog = ({ open, handleClose,handleFileChange }) => {
 };
 
 function Profile() {
-  const {uid,token, loggedInUser} = useSelector((state)=>state.auth)
-  const dispatch = useDispatch()
+  const { uid, token, loggedInUser } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [Profiledata, setProfiledata] = useState({
     about: loggedInUser?.about,
     name: loggedInUser?.name,
@@ -83,8 +87,6 @@ function Profile() {
     });
   };
 
-  
-
   const handleFileChange = (e) => {
     setProfiledata({
       ...Profiledata,
@@ -92,31 +94,32 @@ function Profile() {
     });
   };
 
-  const handleSubmit = (e)=>{
-    e.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault();
     console.log(Profiledata);
-    const formData = new FormData()
+    const formData = new FormData();
 
-    formData.append("about",Profiledata.about)
-    formData.append("name",Profiledata.name)
-    formData.append("profilePic",Profiledata.profilePic)
-    formData.append("uid",uid)
-    Axios.post('http://localhost:5000/user/updateProfile',
-      formData,
-    {
+    formData.append("about", Profiledata.about);
+    formData.append("name", Profiledata.name);
+    formData.append("profilePic", Profiledata.profilePic);
+    formData.append("uid", uid);
+    Axios.post("http://13.126.35.197:5000/user/updateProfile", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization : token
+        Authorization: token,
       },
-    }).then((res)=>{
-      console.log(res);
-      dispatch(openSnackBar({severity:"success",message:res.data.msg}))
-    }).catch((err)=>{
-      console.log(err);
-      dispatch(openSnackBar({severity:"error",message:err.response.data.msg}))
     })
-
-  }
+      .then((res) => {
+        console.log(res);
+        dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(
+          openSnackBar({ severity: "error", message: err.response.data.msg })
+        );
+      });
+  };
   const theme = useTheme();
   return (
     <Box
@@ -153,7 +156,7 @@ function Profile() {
         </Box>
         <Stack alignItems={"center"} spacing={2}>
           <Badge
-            onClick={()=> setOpen(true)}
+            onClick={() => setOpen(true)}
             badgeContent={<Camera size={32} />}
             overlap="circular"
             component={IconButton}
@@ -205,7 +208,13 @@ function Profile() {
             </Stack>
           </form>
         </Stack>
-        {Open && <ImageDialog open={Open} handleClose={handleClose} handleFileChange={handleFileChange}/>}
+        {Open && (
+          <ImageDialog
+            open={Open}
+            handleClose={handleClose}
+            handleFileChange={handleFileChange}
+          />
+        )}
       </Stack>
     </Box>
   );

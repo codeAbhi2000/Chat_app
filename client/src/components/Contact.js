@@ -103,7 +103,7 @@ function Conatct() {
     }
     console.log("this is from make id ", id);
     Axios.post(
-      "http://localhost:5000/user/makeAdmin",
+      "http://13.126.35.197:5000/user/makeAdmin",
       {
         group_id: current_group_conversation.group_id,
         user_id: id,
@@ -132,7 +132,7 @@ function Conatct() {
     if (current_group_conversation?.group_admin.includes(id?.toString())) {
       console.log("From dismiss admin", id);
       Axios.post(
-        "http://localhost:5000/user/dismissAdmin",
+        "http://13.126.35.197:5000/user/dismissAdmin",
         {
           group_id: current_group_conversation.group_id,
           user_id: id,
@@ -164,7 +164,7 @@ function Conatct() {
   const removeParticipants = (id) => {
     console.log("from reove", id);
     Axios.post(
-      "http://localhost:5000/user/removeGroupParticipants",
+      "http://13.126.35.197:5000/user/removeGroupParticipants",
       {
         group_id: current_group_conversation.group_id,
         user_id: id,
@@ -195,7 +195,7 @@ function Conatct() {
 
   const getParticipants = () => {
     Axios.get(
-      `http://localhost:5000/user/getParticipantsDetails/${current_group_conversation?.group_id}`,
+      `http://13.126.35.197:5000/user/getParticipantsDetails/${current_group_conversation?.group_id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -370,7 +370,10 @@ function Conatct() {
                         spacing={2}
                         alignItems={"center"}
                       >
-                        <Avatar src={makeImageUrl(el.avatar.data)} alt={el.name} />
+                        <Avatar
+                          src={makeImageUrl(el.avatar.data)}
+                          alt={el.name}
+                        />
                         {displayInfo?.group_admin.includes(
                           el._id.toString()
                         ) ? (

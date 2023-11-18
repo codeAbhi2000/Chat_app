@@ -12,7 +12,7 @@ const initialState = {
     avatar: null,
     about: "",
   },
-  groupsYouIn:null,
+  groupsYouIn: null,
 };
 
 const slice = createSlice({
@@ -29,7 +29,7 @@ const slice = createSlice({
         about: user.about,
         avatar: user.avatar,
       };
-      state.groupsYouIn = action.payload.groupsIn
+      state.groupsYouIn = action.payload.groupsIn;
     },
     signOut(state, action) {
       state.isLoggedIn = false;
@@ -52,7 +52,7 @@ export default slice.reducer;
 export function loginUseer(inputvalues) {
   return async (dispatch, getState) => {
     Axios.post(
-      "http://localhost:5000/auth/login",
+      "http://13.126.35.197:5000/auth/login",
       {
         ...inputvalues,
       },
@@ -70,7 +70,7 @@ export function loginUseer(inputvalues) {
             token: res.data.token,
             uid: res.data.uid,
             profile: res.data.profile,
-            groupsIn : res.data.profile.groupsIn
+            groupsIn: res.data.profile.groupsIn,
           })
         );
         dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
@@ -93,7 +93,7 @@ export function logoutUser() {
 export function forgotPassword(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "http://localhost:5000/auth/forgotPassword",
+      "http://13.126.35.197:5000/auth/forgotPassword",
       {
         ...inputData,
       },
@@ -120,7 +120,7 @@ export function resetPassowrd(inputData) {
   const { uid, password, token } = inputData;
   return (dispatch, getState) => {
     Axios.post(
-      "http://localhost:5000/auth/resetPassword",
+      "http://13.126.35.197:5000/auth/resetPassword",
       {
         uid: uid,
         pass: password,
@@ -148,7 +148,7 @@ export function resetPassowrd(inputData) {
 export function registerUser(inputData) {
   return async (dispatch, getState) => {
     Axios.post(
-      "http://localhost:5000/auth/register",
+      "http://13.126.35.197:5000/auth/register",
       {
         ...inputData,
       },
@@ -177,7 +177,7 @@ export function registerUser(inputData) {
 export function verifyUser(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "http://localhost:5000/auth/verifyOtp",
+      "http://13.126.35.197:5000/auth/verifyOtp",
       {
         ...inputData,
       },

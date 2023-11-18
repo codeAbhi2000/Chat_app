@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Axios from 'axios'
-
+import Axios from "axios";
 
 const initialState = {
   sidebar: {
@@ -12,13 +11,13 @@ const initialState = {
     message: null,
     severity: null,
   },
-  users:[],
-  friends:[],
-  requests:[],
-  allUsers:[],
-  
-  chat_type:null,
-  room_id:null
+  users: [],
+  friends: [],
+  requests: [],
+  allUsers: [],
+
+  chat_type: null,
+  room_id: null,
 };
 
 const slice = createSlice({
@@ -41,23 +40,22 @@ const slice = createSlice({
       state.snackbar.message = null;
       state.snackbar.severity = null;
     },
-    updateUsers(state,action){
-      state.users = action.payload.users
+    updateUsers(state, action) {
+      state.users = action.payload.users;
     },
-    upDateOtherUser(state,action){
-      state.allUsers = action.payload.allUsers
+    upDateOtherUser(state, action) {
+      state.allUsers = action.payload.allUsers;
     },
-    updateFriends(state,action){
-      state.friends = action.payload.friends
+    updateFriends(state, action) {
+      state.friends = action.payload.friends;
     },
-    updateRequests(state,action){
-      state.requests = action.payload.requests
+    updateRequests(state, action) {
+      state.requests = action.payload.requests;
     },
-    selectConversation(state,action){
-      state.chat_type = action.payload.chat_type
-      state.room_id = action.payload.room_id
+    selectConversation(state, action) {
+      state.chat_type = action.payload.chat_type;
+      state.room_id = action.payload.room_id;
     },
-    
   },
 });
 
@@ -93,90 +91,112 @@ export function openSnackBar({ severity, message }) {
     );
 
     setTimeout(() => {
-      dispatch(slice.actions.closeSnackBar())
+      dispatch(slice.actions.closeSnackBar());
     }, 4000);
   };
 }
 
-
 export function closeSnackBar() {
-  return (dispatch,getState)=>{
-    dispatch(slice.actions.closeSnackBar())
-  }
+  return (dispatch, getState) => {
+    dispatch(slice.actions.closeSnackBar());
+  };
 }
 
-export function getAllOtherUser(){
-  return async (dispatch,getState)=>{
-      Axios.get(`http://localhost:5000/user/getOtherUsers/${getState().auth.uid}`,{
-        headers:{
-          "Content-Type": 'application/json',
-          Authorization:getState().auth.token
-        }
-      }).then((res)=>{
-        console.log(res);
-        dispatch(slice.actions.updateUsers({users:res.data.data}))
-      }).catch(err => {
-        console.log(err);
-      })
-  }
-}
-
-export function getFriends(){
-  return async (dispatch,getState)=>{
-      Axios.get(`http://localhost:5000/user/getFriends/${getState().auth.uid}`,{
-        headers:{
-          "Content-Type": 'application/json',
-          Authorization:getState().auth.token
-        }
-      }).then((res)=>{
-        console.log(res);
-        dispatch(slice.actions.updateFriends({friends:res.data.data}))
-      }).catch(err => {
-        console.log(err);
-      })
-  }
-}
-export function getFriendRequests(){
-  return async (dispatch,getState)=>{
-      Axios.get(`http://localhost:5000/user/getFriendRequests/${getState().auth.uid}`,{
-        headers:{
-          "Content-Type": 'application/json',
-          Authorization:getState().auth.token
-        }
-      }).then((res)=>{
-        console.log(res);
-        dispatch(slice.actions.updateRequests({requests:res.data.data ?res.data.data:[] }))
-      }).catch(err => {
-        console.log(err);
-      })
-  }
-}
-
-
-export function selectChat({room_id,chat_type}) {
-  return (dispatch,getState)=>{
-    dispatch(slice.actions.selectConversation({room_id,chat_type}))
-  }
-}
-
-export function getAllUsers(){
-  return (dispatch,getState)=>{
-    Axios.get(`http://localhost:5000/user/getAllUsers/${getState().auth.uid}`,{
-      headers:{
-        "Content-Type": 'application/json',
-        Authorization:getState().auth.token
+export function getAllOtherUser() {
+  return async (dispatch, getState) => {
+    Axios.get(
+      `http://13.126.35.197:5000/user/getOtherUsers/${getState().auth.uid}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getState().auth.token,
+        },
       }
-    }).then((res)=>{
-      console.log(res);
-      dispatch(slice.actions.upDateOtherUser({allUsers:res.data.data}))
-    }).catch(err=>{
-      console.log(err);
-    })
-  }
+    )
+      .then((res) => {
+        console.log(res);
+        dispatch(slice.actions.updateUsers({ users: res.data.data }));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 }
 
-export function AddGroupIds(group_id){
-  return async (dispatch,getState)=>{
-    dispatch(slice.actions.addGroupIds({group_id}))
-  }
+export function getFriends() {
+  return async (dispatch, getState) => {
+    Axios.get(
+      `http://13.126.35.197:5000/user/getFriends/${getState().auth.uid}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getState().auth.token,
+        },
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        dispatch(slice.actions.updateFriends({ friends: res.data.data }));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
+export function getFriendRequests() {
+  return async (dispatch, getState) => {
+    Axios.get(
+      `http://13.126.35.197:5000/user/getFriendRequests/${getState().auth.uid}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getState().auth.token,
+        },
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        dispatch(
+          slice.actions.updateRequests({
+            requests: res.data.data ? res.data.data : [],
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
+
+export function selectChat({ room_id, chat_type }) {
+  return (dispatch, getState) => {
+    dispatch(slice.actions.selectConversation({ room_id, chat_type }));
+  };
+}
+
+export function getAllUsers() {
+  return (dispatch, getState) => {
+    Axios.get(
+      `http://13.126.35.197:5000/user/getAllUsers/${getState().auth.uid}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getState().auth.token,
+        },
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        dispatch(slice.actions.upDateOtherUser({ allUsers: res.data.data }));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
+
+export function AddGroupIds(group_id) {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.addGroupIds({ group_id }));
+  };
 }

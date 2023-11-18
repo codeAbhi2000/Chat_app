@@ -44,7 +44,7 @@ function CreateGrpDialog({ open, handleClose }) {
     setDOpen(false);
   };
 
-  const { uid,token } = useSelector((state) => state.auth);
+  const { uid, token } = useSelector((state) => state.auth);
   const [groupData, setGroupData] = useState({
     grpName: "",
     tagline: "",
@@ -80,7 +80,6 @@ function CreateGrpDialog({ open, handleClose }) {
     e.preventDefault();
 
     // Your logic to send groupData to the backend
-   
 
     const formData = new FormData();
     formData.append("grpName", groupData.grpName);
@@ -98,26 +97,27 @@ function CreateGrpDialog({ open, handleClose }) {
 
     try {
       const response = await Axios.post(
-        "http://localhost:5000/user/createGroup",
+        "http://13.126.35.197:5000/user/createGroup",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization : token
+            Authorization: token,
           },
         }
       );
-        console.log(response);
-      socket.emit("create_group_room",{groupId : response.data.grpId,user_id : uid})
-     
+      console.log(response);
+      socket.emit("create_group_room", {
+        groupId: response.data.grpId,
+        user_id: uid,
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if(allUsers.length === 0)
-    dispatch(getAllUsers());
+    if (allUsers.length === 0) dispatch(getAllUsers());
   }, []);
 
   return (
@@ -174,7 +174,9 @@ function CreateGrpDialog({ open, handleClose }) {
                     required
                     onChange={handleFileChange}
                   />
-                  <FormHelperText>the image size should be within 20kb</FormHelperText>
+                  <FormHelperText>
+                    the image size should be within 20kb
+                  </FormHelperText>
                   <Stack spacing={1}>
                     <Stack
                       direction={"row"}
@@ -197,8 +199,9 @@ function CreateGrpDialog({ open, handleClose }) {
                       p={2}
                     >
                       {groupData.members.slice(1).map((id, i) => {
-                        const user = allUsers.find(el => el._id === id)
-                        return <Stack
+                        const user = allUsers.find((el) => el._id === id);
+                        return (
+                          <Stack
                             direction={"row"}
                             spacing={2}
                             key={user._id}
@@ -209,18 +212,18 @@ function CreateGrpDialog({ open, handleClose }) {
                               direction={"row"}
                               alignItems={"center"}
                             >
-                              <Avatar
-                                src={user.avatar}
-                                alt={user.name}
-                              />
+                              <Avatar src={user.avatar} alt={user.name} />
                               <Typography variant="caption">
                                 {user.name}
                               </Typography>
                             </Stack>
-                            <IconButton onClick={()=>handleMemberRemove(i+1)}>
+                            <IconButton
+                              onClick={() => handleMemberRemove(i + 1)}
+                            >
                               <XCircle size={15} />
                             </IconButton>
                           </Stack>
+                        );
                       })}
                     </Stack>
                   </Stack>
@@ -248,19 +251,17 @@ function CreateGrpDialog({ open, handleClose }) {
                     spacing={1}
                     key={el._id}
                   >
-                    <Stack
-                      alignItems={"center"}
-                      spacing={2}
-                      direction={"row"}
-                    >
+                    <Stack alignItems={"center"} spacing={2} direction={"row"}>
                       <Avatar src={el.avatar} alt={el.name} />
                       <Typography variant="body1">{el.name}</Typography>
                     </Stack>
-                    <IconButton onClick={()=>{
-                      if(groupData.members.length < 6){
-                        groupData.members.push(el._id)
-                      }
-                    }}>
+                    <IconButton
+                      onClick={() => {
+                        if (groupData.members.length < 6) {
+                          groupData.members.push(el._id);
+                        }
+                      }}
+                    >
                       <PlusCircle />
                     </IconButton>
                   </Stack>
