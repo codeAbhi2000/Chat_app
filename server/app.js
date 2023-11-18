@@ -15,7 +15,9 @@ const grpRoutes = require("./routes/grpRoutes")
 
 app.use(cors());
 app.use(bodyParser.json({ extended: false }));
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy : false,
+}))
 // app.use(xss())
 app.use(fileUpload())
 
