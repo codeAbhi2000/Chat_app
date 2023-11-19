@@ -19,12 +19,15 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MaterialUISwitch from "./AntSwitch";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ThemeContext from "../context/ThemeContext";
 import {useNavigate} from 'react-router-dom'
+import { logoutUser } from "../redux/slices/auth";
+import { socket } from "../socket";
 
 function Settings() {
   const theme = useTheme();
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -32,7 +35,7 @@ function Settings() {
   }
   const smallScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const themeContext = useContext(ThemeContext);
-  const {loggedInUser} = useSelector((state)=>state.auth)
+  const {uid,loggedInUser} = useSelector((state)=>state.auth)
   const makeImageUrl = (avatar) => {
     const uint8Array = new Uint8Array(avatar);
     const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
@@ -120,7 +123,10 @@ function Settings() {
           </Stack>
          { !smallScreen ? <Divider /> :  <></>}
           {!smallScreen ? (
-            <Stack direction={"row"} alignItems={"center"} spacing={2}>
+            <Stack direction={"row"} alignItems={"center"} spacing={2} onClick = {()=>{
+                  dispatch(logoutUser())
+                  socket.emit("end",{user_id:uid})
+            }}>
               <SignOut size={25} />
               <Typography variant="body2">Logout</Typography>
             </Stack>
