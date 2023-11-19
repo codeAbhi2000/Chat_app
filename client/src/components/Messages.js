@@ -33,7 +33,7 @@ function Messages({ menu }) {
     <Box p={3} ref={messageListRef}>
       <Stack spacing={3}>
         {chat_type === "individual"
-          ? current_messages.map((el) => {
+          ? current_messages?.map((el) => {
               switch (el.type) {
                 case "img":
                   return <MediaMsg el={el} menu={menu} />;
@@ -48,7 +48,7 @@ function Messages({ menu }) {
                   return <TextMsg el={el} menu={menu} />;
               }
             })
-          : group_messages.map((el) => {
+          : group_messages?.map((el) => {
               switch (el.type) {
                 case "Text":
                   return <GroupMsg el={el} menu={menu} />;

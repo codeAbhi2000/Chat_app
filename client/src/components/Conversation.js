@@ -84,11 +84,11 @@ function Conversation() {
 
   useEffect(() => {
     if (chat_type === "individual") {
-      let current = conversations.find((el) => el.chat_id === room_id);
+      let current = conversations?.find((el) => el.chat_id === room_id);
 
       console.log("this is current chat", current);
 
-      socket.emit(
+      socket?.emit(
         "get_messages",
         { user_id: current._id, chat_id: current.chat_id },
         (err, data) => {
@@ -107,7 +107,7 @@ function Conversation() {
       console.log(current_grpchat);
 
       dispatch(SetCurrentGroupChat(current_grpchat));
-      socket.emit(
+      socket?.emit(
         "get_group_messages",
         { group_id: current_grpchat?.group_id },
         (err, data) => {
@@ -166,7 +166,7 @@ function Conversation() {
                       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                       variant="dot"
                     >
-                      <Avatar src={makeImageUrl(current_conversation?.avatar.data)} />
+                      <Avatar src={makeImageUrl(current_conversation?.avatar?.data)} />
                     </StyledBadge>
                   ) : (
                     <Avatar src={makeImageUrl(current_conversation?.avatar)} />
@@ -262,14 +262,14 @@ function Conversation() {
                 <IconButton
                   onClick={() => {
                     chat_type === "individual"
-                      ? socket.emit("text_message", {
+                      ? socket?.emit("text_message", {
                           message: linkify(value),
                           chat_id: room_id,
                           from: uid,
                           to: current_conversation._id,
                           type: containsUrl(value) ? "Link" : "Text",
                         })
-                      : socket.emit("group_message", {
+                      : socket?.emit("group_message", {
                           group_id: current_group_conversation?.group_id,
                           from_user_id: uid,
                           message: linkify(value),

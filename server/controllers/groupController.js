@@ -13,7 +13,7 @@ exports.createGroup = (req, res, next) => {
   }
 
    //Convert the image file to a Buffer
-  const iconBuffer = groupIconFile.data;
+  const iconBuffer = groupIconFile?.data;
 
   const grpmbr = members.split(",").map(member => parseInt(member));
 

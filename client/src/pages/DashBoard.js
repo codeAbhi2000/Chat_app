@@ -71,7 +71,7 @@ function DashBoard() {
 
     // console.log(groupsYouIn);
     try {
-      socket.emit("join_to_group", { user_id: uid, group_ids: groupsYouIn });
+      socket?.emit("join_to_group", { user_id: uid, group_ids: groupsYouIn });
 
       socket.on("new_friend_request", (data) => {
         dispatch(openSnackBar({ severity: "success", message: data.message }));

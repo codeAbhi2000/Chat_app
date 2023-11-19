@@ -83,7 +83,7 @@ function Settings() {
           <Box>
             <Avatar
               sx={{ width: 56, height: 56 }}
-              src={makeImageUrl(loggedInUser?.avatar.data)}
+              src={makeImageUrl(loggedInUser?.avatar?.data)}
               alt={loggedInUser?.name}
             />
           </Box>

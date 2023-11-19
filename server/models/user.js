@@ -82,7 +82,7 @@ class User {
           callback(error, null);
         } else {
           // Parse the existing JSON array
-          const existingAdminArray = results[0].group_admin;
+          const existingAdminArray = results[0]?.group_admin;
 
           // Check if userId is not already in the array to avoid duplicates
           if (!existingAdminArray?.includes(group_id.toString())) {

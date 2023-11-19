@@ -198,8 +198,8 @@ function CreateGrpDialog({ open, handleClose }) {
                       sx={{ overflowX: "scroll" }}
                       p={2}
                     >
-                      {groupData.members.slice(1).map((id, i) => {
-                        const user = allUsers.find((el) => el._id === id);
+                      {groupData?.members.slice(1).map((id, i) => {
+                        const user = allUsers?.find((el) => el._id === id);
                         return (
                           <Stack
                             direction={"row"}
@@ -257,8 +257,8 @@ function CreateGrpDialog({ open, handleClose }) {
                     </Stack>
                     <IconButton
                       onClick={() => {
-                        if (groupData.members.length < 6) {
-                          groupData.members.push(el._id);
+                        if (groupData?.members.length < 6) {
+                          groupData?.members.push(el._id);
                         }
                       }}
                     >

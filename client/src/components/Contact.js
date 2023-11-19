@@ -105,7 +105,7 @@ function Conatct() {
     Axios.post(
       "http://13.126.35.197:5000/user/makeAdmin",
       {
-        group_id: current_group_conversation.group_id,
+        group_id: current_group_conversation?.group_id,
         user_id: id,
       },
       {
@@ -134,7 +134,7 @@ function Conatct() {
       Axios.post(
         "http://13.126.35.197:5000/user/dismissAdmin",
         {
-          group_id: current_group_conversation.group_id,
+          group_id: current_group_conversation?.group_id,
           user_id: id,
         },
         {
@@ -166,7 +166,7 @@ function Conatct() {
     Axios.post(
       "http://13.126.35.197:5000/user/removeGroupParticipants",
       {
-        group_id: current_group_conversation.group_id,
+        group_id: current_group_conversation?.group_id,
         user_id: id,
       },
       {
@@ -371,7 +371,7 @@ function Conatct() {
                         alignItems={"center"}
                       >
                         <Avatar
-                          src={makeImageUrl(el.avatar.data)}
+                          src={makeImageUrl(el.avatar?.data)}
                           alt={el.name}
                         />
                         {displayInfo?.group_admin.includes(
@@ -388,7 +388,7 @@ function Conatct() {
                           </Typography>
                         )}
                       </Stack>
-                      {current_group_conversation.group_admin.includes(
+                      {current_group_conversation?.group_admin.includes(
                         uid.toString()
                       ) ? (
                         <IconButton
@@ -475,7 +475,7 @@ function Conatct() {
           handleClose={handleCloseAllusersDlg}
           usersInGrp={Participants}
           adminId={uid}
-          group_id={current_group_conversation.group_id}
+          group_id={current_group_conversation?.group_id}
         />
       )}
     </Box>

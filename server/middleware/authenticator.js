@@ -16,12 +16,12 @@ const validator = (req, res, next) => {
       // console.log(respnse);
       if (respnse) {
         // const userId = decoded.userId;
-        const email = respnse.email;
+        const email = respnse?.email;
         // console.log(email);
         User.findByEmail(email, (err, result) => {
           if (err) {
             res.status(401).send({ error: "error", msg: "Invalid user" });
-          } else if (result[0].verified) {
+          } else if (result[0]?.verified) {
             next();
           } else {
             res.status(401).send({ error: "error", msg: "Invalid user" });

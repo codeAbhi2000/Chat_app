@@ -26,7 +26,7 @@ class Group {
           const groupId = createGroupResults.insertId;
 
           // Add participants to the group
-          participants.forEach((participant) => {
+          participants?.forEach((participant) => {
             db.query(
               addParticipantsSQL,
               [groupId, participant],
@@ -121,12 +121,12 @@ class Group {
           callback(error, null);
         } else {
           // Parse the existing JSON array
-          const existingAdminArray = results[0].group_admin;
+          const existingAdminArray = results[0]?.group_admin;
 
           // Check if userId is not already in the array to avoid duplicates
-          if (!existingAdminArray.includes(user_id.toString())) {
+          if (!existingAdminArray?.includes(user_id.toString())) {
             // Insert the userId into the array
-            existingAdminArray.push(user_id.toString());
+            existingAdminArra?.push(user_id.toString());
 
             // Update the group_admin in the database
             db.query(
@@ -158,14 +158,14 @@ class Group {
         callback(error,null)
       } else {
         // Parse the existing JSON array
-        const existingAdminArray = (results[0].group_admin);
+        const existingAdminArray = (results[0]?.group_admin);
     
         // Check if userId is in the array
-        const userIdIndex = existingAdminArray.indexOf(user_id.toString());
+        const userIdIndex = existingAdminArray?.indexOf(user_id.toString());
     
         if (userIdIndex !== -1) {
           // Remove userId from the array
-          existingAdminArray.splice(userIdIndex, 1);
+          existingAdminArray?.splice(userIdIndex, 1);
     
           // Update the group_admin in the database
           db.query('UPDATE my_groups SET group_admin = ? WHERE group_id = ?', [JSON.stringify(existingAdminArray), group_id], (updateError,result) => {

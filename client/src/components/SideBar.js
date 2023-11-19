@@ -157,7 +157,7 @@ function SideBar() {
           }}
         >
           <Stack spacing={1} px={0.5}>
-            {Profile_Menu.map((el, idx) => {
+            {Profile_Menu?.map((el, idx) => {
               return (
                 <MenuItem
                   onClick={() => {

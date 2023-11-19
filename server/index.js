@@ -239,7 +239,7 @@ io.on("connection", async (socket) => {
       if (err) {
         return console.log(err);
       }
-      result.forEach((el) => {
+      result?.forEach((el) => {
         if(el.user_id !== data.user_id){
           User.addGroupsId(data.groupId,el.user_id,(err,result)=>{
             if(err){
@@ -289,7 +289,7 @@ io.on("connection", async (socket) => {
           message: "participant added successfully",
         });
       });
-      user_ids.forEach((user)=>{
+      user_ids?.forEach((user)=>{
         User.addGroupsId(group_id,user,(err,result)=>{
           if(err){
             return console.log(err);

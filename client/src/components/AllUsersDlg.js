@@ -47,7 +47,7 @@ function AllUsersDlg({open,handleClose,usersInGrp,adminId,group_id}) {
                 p={2}
               >
                 {SelectedMembers?.map((id, i) => {
-                  const user = allUsers.find((el) => el._id === id);
+                  const user = allUsers?.find((el) => el._id === id);
                   return (
                     <Stack
                       direction={"row"}
@@ -60,7 +60,7 @@ function AllUsersDlg({open,handleClose,usersInGrp,adminId,group_id}) {
                         direction={"row"}
                         alignItems={"center"}
                       >
-                        <Avatar src={user.avatar} alt={user.name} />
+                        <Avatar src={user?.avatar} alt={user.name} />
                         <Typography variant="caption">{user.name}</Typography>
                       </Stack>
                       <IconButton onClick={() => handleMemberRemove(i)}>

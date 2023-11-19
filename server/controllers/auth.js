@@ -133,7 +133,7 @@ exports.login = (req, res) => {
   User.findByEmail(email, (err, results) => {
     if (err) {
       res.status(500).json({ error: "Error", msg: "spmething went wrong" });
-    } else if (results.length === 0) {
+    } else if (results?.length === 0) {
       res.status(401).json({
         error: "Authentication failed",
         msg: "No user found with this eamil",
