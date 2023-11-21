@@ -27,7 +27,7 @@ const reactPath = path.join(_dirname,'../client/build')
 
 app.use(express.static(reactPath))
 
-app.get('/*',(req,res)=>{
+app.get('/',(req,res)=>{
     res.sendFile(
         path.join(__dirname,"../client/build/index.html"),(err)=>{
             if(err){
