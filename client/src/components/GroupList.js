@@ -10,8 +10,6 @@ import {
 } from "@mui/material";
 import SearchBar from "./SearchBar";
 import { Plus } from "phosphor-react";
-
-import { ChatList as List } from "../assets/data";
 import CreateGrpDialog from "./CreateGrpDialog";
 import GroupChatElement from "./GroupChatElement";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +29,7 @@ function GroupList() {
 
   useEffect(() => {
     socket.emit("get_group_list",{user_id:uid},(err,data)=>{
-      console.log(data);
+      // console.log(data);
       dispatch(FetchGrooupList(data))
     })
   }, [])

@@ -19,7 +19,7 @@ const slice = createSlice({
   reducers: {
     fetchConversation(state, action) {
       console.log(action.payload.conversations);
-      const new_list = action.payload.conversations.conversations.map(
+      const new_list = action.payload.conversations.conversations?.map(
         (row) => ({
           chat_id: row.chat_id,
           _id: row._id,
@@ -36,7 +36,7 @@ const slice = createSlice({
     },
     updateConversation(state, action) {
       const new_conversation = action.payload.conversations;
-      state.direct_chat.conversations = state.direct_chat.conversations.map(
+      state.direct_chat.conversations = state.direct_chat.conversations?.map(
         (el) => {
           if (el.chat_id !== new_conversation.chat_id) {
             return el;
@@ -59,7 +59,7 @@ const slice = createSlice({
     addConversation(state, action) {
       console.log(action.payload.conversations);
       const new_conversation = action.payload.conversations;
-      state.direct_chat.conversations.push({
+      state.direct_chat.conversations?.push({
         chat_id: new_conversation.chat_id,
         _id: new_conversation._id,
         name: new_conversation.name,
@@ -77,23 +77,25 @@ const slice = createSlice({
     fetchCurrentMessages(state, action) {
       const user_id = action.payload.user_id;
       const messages = action.payload.messages;
-      const formatted_messages = messages.map((el) => ({
+      const formatted_messages = messages?.map((el) => ({
         id: el.message_id,
         chat_id: el.chat_id,
-        type: el.type,
+        type: el.message_type,
         time: el.message_time,
         message: el.text,
+        imgUrl : el.imageUrl,
+        docUrl : el.docUrl,
         incoming: el.to_user_id === user_id,
         outgoing: el.from_user_id === user_id,
       }));
       state.direct_chat.current_messages = formatted_messages;
     },
     addDirectMessage(state, action) {
-      state.direct_chat.current_messages.push(action.payload.message);
+      state.direct_chat.current_messages?.push(action.payload.message);
     },
     fetchGroupList(state, action) {
-      console.log(action.payload.list);
-      const new_list = action.payload.list.map((el) => {
+      // console.log(action.payload.list);
+      const new_list = action.payload.list?.map((el) => {
         return {
           group_id: el.group_id,
           group_name: el.group_name,
@@ -112,7 +114,7 @@ const slice = createSlice({
     fetchGroupMessages(state,action){
       const user_id = action.payload.user_id
       const messages = action.payload.messages
-      const formated_message = messages.map((el)=>{
+      const formated_message = messages?.map((el)=>{
         return {
           id:el.message_id,
           group_id:el.group_id,
@@ -121,6 +123,8 @@ const slice = createSlice({
           sender_name:el.from_user_id === user_id ? "You" :el.from_user_name,
           message:el.message,
           message_time:el.message_time,
+          imgUrl : el.imageUrl,
+          docUrl : el.docUrl,
           incoming : el.from_user_id !== user_id,
           outgoing : el.from_user_id === user_id
         }

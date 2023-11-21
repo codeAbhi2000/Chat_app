@@ -16,7 +16,7 @@ import Messages from "./Messages";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { useDispatch } from "react-redux";
-import { toggleSidebar } from "../redux/slices/app";
+import { openSnackBar, toggleSidebar } from "../redux/slices/app";
 import ChatInput from "./ChatInput";
 import { useSelector } from "react-redux";
 import {
@@ -29,6 +29,15 @@ import { socket } from "../socket";
 import SnackbarAlert from "./Snackbar";
 
 function Conversation() {
+  const [messageType, setMessageType] = useState("Text");
+  const [imageFile, setImageFile] = useState({
+    file : null,
+    doctype: null
+  });
+  const [docFile, setDocFile] = useState({
+    file : null,
+    doctype: null
+  });
   const theme = useTheme();
   const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
   const { uid } = useSelector((state) => state.auth);
@@ -71,54 +80,134 @@ function Conversation() {
 
   function linkify(text) {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(
-      urlRegex,
-      (url) => `<a href="${url}" target="_blank">${url}</a>`
-    );
+    if (urlRegex.test(text)) {
+      return text.replace(urlRegex, (url) => `${url}`);
+    } else {
+      return text;
+    }
   }
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+   
+    if (selectedFile) {
+      if (selectedFile.type.startsWith("image/")) {
+        // console.log("Selected image file:", selectedFile);
+        // Add your logic for handling image files
+       
+        setImageFile({
+          file : selectedFile,
+          doctype : selectedFile.type
+        });
+      } else {
+        // console.log("Selected non-image file:", selectedFile);
+        // Add your logic for handling other types of files
+       
+        setDocFile({
+          file: selectedFile,
+          doctype : selectedFile.type
+        });
+      }
+    }
+  };
 
   function containsUrl(text) {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     return urlRegex.test(text);
   }
 
-  useEffect(() => {
-    if (chat_type === "individual") {
-      let current = conversations?.find((el) => el.chat_id === room_id);
-
-      console.log("this is current chat", current);
-
-      socket?.emit(
-        "get_messages",
-        { user_id: current._id, chat_id: current.chat_id },
-        (err, data) => {
-          if (err) {
-            console.log(err);
-          }
-          console.log("this is from server", data);
-          dispatch(FetchCurrentMessages(data));
+  const handleSnedMessageButton = () => {
+    try {
+      if (chat_type === "individual") {
+        if (messageType === "Text") {
+          socket?.emit("text_message", {
+            message: linkify(value),
+            chat_id: room_id,
+            from: uid,
+            to: current_conversation._id,
+            type: containsUrl(value) ? "Link" : "Text",
+          });
+          setValue("");
+        }else{
+          alert("emiting media message")
+          socket?.emit("media_messages",{
+            file : messageType === "Img" ? imageFile.file : docFile.file,
+            chat_id: room_id,
+            from: uid,
+            to: current_conversation._id,
+            type: messageType,
+            doctype : messageType === "Img" ? imageFile.doctype : docFile.doctype,
+          })
         }
-      );
-
-      dispatch(SetCurrentConversation(current));
-    } else {
-      const current_grpchat = group_list.find((el) => el.group_id === room_id);
-
-      console.log(current_grpchat);
-
-      dispatch(SetCurrentGroupChat(current_grpchat));
-      socket?.emit(
-        "get_group_messages",
-        { group_id: current_grpchat?.group_id },
-        (err, data) => {
-          if (err) {
-            console.log(err);
-          }
-          console.log("group messages from sever", data);
-          dispatch(FetchGroupMessage(data));
+      } else {
+        if (messageType === "Text") {
+          socket?.emit("group_message", {
+            group_id: current_group_conversation?.group_id,
+            from_user_id: uid,
+            message: linkify(value),
+            type: containsUrl(value) ? "Link" : "Text",
+          });
+          setValue("");
         }
-      );
+        else{
+          alert("emiting media message")
+          socket?.emit("group_media_message",{
+            file : messageType === "Img" ? imageFile.file : docFile.file,
+            group_id: current_group_conversation?.group_id,
+            from_user_id: uid,
+            type: messageType,
+            doctype : messageType === "Img" ? imageFile.doctype : docFile.doctype,
+          })
+        }
+      }
+    } catch (error) {
+      dispatch(openSnackBar({severity:"error",message:"somthig went wrong"}))
     }
+    
+  };
+
+  useEffect(() => {
+    try {
+      if (chat_type === "individual") {
+        let current = conversations?.find((el) => el.chat_id === room_id);
+  
+        // console.log("this is current chat", current);
+  
+        socket?.emit(
+          "get_messages",
+          { user_id: current._id, chat_id: current.chat_id },
+          (err, data) => {
+            if (err) {
+              console.log(err);
+            }
+            // console.log("this is from server", data);
+            dispatch(FetchCurrentMessages(data));
+          }
+        );
+  
+        dispatch(SetCurrentConversation(current));
+      } else {
+        const current_grpchat = group_list.find((el) => el.group_id === room_id);
+  
+        // console.log(current_grpchat);
+  
+        dispatch(SetCurrentGroupChat(current_grpchat));
+        socket?.emit(
+          "get_group_messages",
+          { group_id: current_grpchat?.group_id },
+          (err, data) => {
+            if (err) {
+              console.log(err);
+            }
+            // console.log("group messages from sever", data);
+            dispatch(FetchGroupMessage(data));
+          }
+        );
+      }
+    } catch (error) {
+      dispatch(openSnackBar({severity:"error",message:"somthinf went wrong"}))
+    }
+    
   }, [room_id]);
 
   return (
@@ -166,7 +255,9 @@ function Conversation() {
                       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                       variant="dot"
                     >
-                      <Avatar src={makeImageUrl(current_conversation?.avatar?.data)} />
+                      <Avatar
+                        src={makeImageUrl(current_conversation?.avatar?.data)}
+                      />
                     </StyledBadge>
                   ) : (
                     <Avatar src={makeImageUrl(current_conversation?.avatar)} />
@@ -174,7 +265,9 @@ function Conversation() {
                 </Box>
               ) : (
                 <Box>
-                  <Avatar src={makeImageUrl(current_group_conversation?.avatar)} />
+                  <Avatar
+                    src={makeImageUrl(current_group_conversation?.avatar)}
+                  />
                 </Box>
               )}
               <Stack spacing={0.2}>
@@ -244,6 +337,8 @@ function Conversation() {
                 inputRef={inputRef}
                 value={value}
                 setValue={setValue}
+                setMessageType={setMessageType}
+                handleFileChange={handleFileChange}
               />
             </Stack>
             <Box
@@ -259,25 +354,7 @@ function Conversation() {
                 justifyContent={"center"}
                 sx={{ height: "100%", width: "100%" }}
               >
-                <IconButton
-                  onClick={() => {
-                    chat_type === "individual"
-                      ? socket?.emit("text_message", {
-                          message: linkify(value),
-                          chat_id: room_id,
-                          from: uid,
-                          to: current_conversation._id,
-                          type: containsUrl(value) ? "Link" : "Text",
-                        })
-                      : socket?.emit("group_message", {
-                          group_id: current_group_conversation?.group_id,
-                          from_user_id: uid,
-                          message: linkify(value),
-                          type: containsUrl(value) ? "Link" : "Text",
-                        });
-                    setValue("");
-                  }}
-                >
+                <IconButton onClick={handleSnedMessageButton}>
                   <PaperPlaneTilt color="white" />
                 </IconButton>
               </Stack>

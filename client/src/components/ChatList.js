@@ -63,7 +63,7 @@ function ChatList() {
         <Stack sx={{ height: "100%", flexGrow: 1, overflowY: "scroll" }}>
           <Stack p={2} spacing={3}>
             <Typography variant="subtitle1">All Chats</Typography>
-            {conversations.map((el) => {
+            {conversations?.map((el) => {
               return <ChartElement {...el} key={el._id} />;
             })}
           </Stack>

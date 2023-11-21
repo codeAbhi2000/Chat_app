@@ -3,6 +3,9 @@ import React, { useEffect, useRef } from "react";
 import { Chat_History } from "../assets/data";
 import {
   Docmsg,
+  GroupDocMsg,
+  GroupImgMsg,
+  GroupLinkMsg,
   GroupMsg,
   LinkMsg,
   MediaMsg,
@@ -22,7 +25,7 @@ function Messages({ menu }) {
     (state) => state.conversation.group_chat
   );
 
-  console.log(group_messages);
+  // console.log(group_messages);
   const messageListRef = useRef(null);
 
   useEffect(() => {
@@ -35,23 +38,29 @@ function Messages({ menu }) {
         {chat_type === "individual"
           ? current_messages?.map((el) => {
               switch (el.type) {
-                case "img":
+                case "Img":
                   return <MediaMsg el={el} menu={menu} />;
-                case "doc":
+                case "Doc":
                   return <Docmsg el={el} menu={menu} />;
-                case "link":
+                case "Link":
                   return <LinkMsg el={el} menu={menu} />;
-                case "reply":
-                  return <ReplyMsg el={el} menu={menu} />;
+                case "Text":
+                  return <TextMsg el={el} menu={menu} />;
 
                 default:
-                  return <TextMsg el={el} menu={menu} />;
+                  return <></>;
               }
             })
           : group_messages?.map((el) => {
               switch (el.type) {
                 case "Text":
                   return <GroupMsg el={el} menu={menu} />;
+                case "Link":
+                  return <GroupLinkMsg el={el} menu={menu} />;
+                case "Doc":
+                  return <GroupDocMsg el={el} menu={menu} />;
+                case "Img":
+                  return <GroupImgMsg el={el} menu={menu} />;
 
                 default:
                   break;

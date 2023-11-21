@@ -8,11 +8,26 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
+import { DotsThreeVertical, DownloadSimple, File, Image } from "phosphor-react";
 import React from "react";
 import { Message_options } from "../assets/data";
 
-function Docmsg({ el ,menu }) {
+function Docmsg({ el, menu }) {
+  const handleDownload = () => {
+    const documentUrl = el.docUrl;
+    console.log(documentUrl);
+    const anchor = document.createElement("a");
+
+    anchor.href = documentUrl;
+
+    anchor.download = `${el.docUrl.split("/").pop()}`;
+
+    document.body.appendChild(anchor);
+
+    anchor.click();
+
+    document.body.removeChild(anchor);
+  };
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -31,23 +46,23 @@ function Docmsg({ el ,menu }) {
             direction={"row"}
             sx={{ backgroundColor: "background.default", borderRadius: 1 }}
           >
-            <Image size={48} />
-            <Typography variant="caption">Abstract.png</Typography>
-            <IconButton>
+            <File size={48} />
+            <Typography variant="caption">
+              {el.docUrl.split("/").pop()}
+            </Typography>
+            <IconButton onClick={handleDownload}>
               <DownloadSimple />
             </IconButton>
           </Stack>
-          <Typography variant="body2" color={el.incoming ? "text" : "white"}>
-            {el.message}
-          </Typography>
+          
         </Stack>
       </Box>
-     {menu && <MessageOptions/>}
+      {menu && <MessageOptions />}
     </Stack>
   );
 }
 
-function LinkMsg({ el,menu }) {
+function LinkMsg({ el, menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -65,36 +80,26 @@ function LinkMsg({ el,menu }) {
             alignItems={"start"}
             sx={{ backgroundColor: "background.paper", borderRadius: 1 }}
           >
-            <img
-              src={el.preview}
+            <iframe
+              src={el.message}
               alt={el.message}
               style={{ borderRadius: "10px", maxHeight: 210 }}
             />
-            <Stack spacing={2}>
-              <Typography variant="subtitle2">
-                creating first chat appa
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                component={Link}
-                sx={{ color: "primary.main" }}
-                to="//http://www.youtube.com"
-              >
-                www.youtube.com
-              </Typography>
-            </Stack>
+
             <Typography variant="body2" color={el.incoming ? "text" : "white"}>
-              {el.message}
+              <a href={el.message} target="_blank">
+                click
+              </a>
             </Typography>
           </Stack>
         </Stack>
       </Box>
-      {menu && <MessageOptions/>}
+      {menu && <MessageOptions />}
     </Stack>
   );
 }
 
-function ReplyMsg({ el,menu }) {
+function ReplyMsg({ el, menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -121,12 +126,12 @@ function ReplyMsg({ el,menu }) {
           </Typography>
         </Stack>
       </Box>
-      {menu && <MessageOptions/>}
+      {menu && <MessageOptions />}
     </Stack>
   );
 }
 
-function GroupMsg({el,menu}){
+function GroupMsg({ el, menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -142,7 +147,11 @@ function GroupMsg({el,menu}){
             alignItems={"center"}
             spacing={3}
             p={2}
-            sx={{ backgroundColor: "background.paper", borderRadius: 1.5,borderLeft:"2px solid primary.main" }}
+            sx={{
+              backgroundColor: "background.paper",
+              borderRadius: 1.5,
+              borderLeft: "2px solid primary.main",
+            }}
           >
             <Typography variant="body2" color={"text"}>
               {el.sender_name}
@@ -153,12 +162,163 @@ function GroupMsg({el,menu}){
           </Typography>
         </Stack>
       </Box>
-      {menu && <MessageOptions/>}
+      {menu && <MessageOptions />}
+    </Stack>
+  );
+}
+function GroupLinkMsg({ el, menu }) {
+  return (
+    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+      <Box
+        p={1.5}
+        sx={{
+          backgroundColor: el.incoming ? "background.paper" : "primary.main",
+          borderRadius: 1.5,
+          width: "max-conten",
+        }}
+      >
+        <Stack spacing={2}>
+          <Stack
+            alignItems={"center"}
+            spacing={3}
+            p={2}
+            sx={{
+              backgroundColor: "background.paper",
+              borderRadius: 1.5,
+              borderLeft: "2px solid primary.main",
+            }}
+          >
+            <Typography variant="body2" color={"text"}>
+              {el.sender_name}
+            </Typography>
+          </Stack>
+          <Stack
+            p={2}
+            spacing={3}
+            alignItems={"start"}
+            sx={{ backgroundColor: "background.paper", borderRadius: 1 }}
+          >
+            <iframe
+              src={el.message}
+              alt={el.message}
+              style={{ borderRadius: "10px", maxHeight: 210 }}
+            />
+
+            <Typography variant="body2" color={el.incoming ? "text" : "white"}>
+              <a href={el.message} target="_blank">
+                click
+              </a>
+            </Typography>
+          </Stack>
+        </Stack>
+      </Box>
+      {menu && <MessageOptions />}
+    </Stack>
+  );
+}
+function GroupImgMsg({ el, menu }) {
+  return (
+    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+      <Box
+        p={1.5}
+        sx={{
+          backgroundColor: el.incoming ? "background.paper" : "primary.main",
+          borderRadius: 1.5,
+          width: "max-conten",
+        }}
+      >
+        <Stack spacing={2}>
+          <Stack
+            alignItems={"center"}
+            spacing={3}
+            p={2}
+            sx={{
+              backgroundColor: "background.paper",
+              borderRadius: 1.5,
+              borderLeft: "2px solid primary.main",
+            }}
+          >
+            <Typography variant="body2" color={"text"}>
+              {el.sender_name}
+            </Typography>
+          </Stack>
+          <Stack spacing={1}>
+            <img
+              src={el.imgUrl}
+              alt={el.message}
+              style={{ maxHeight: 210, borderRadius: "10px" }}
+            />
+          </Stack>
+        </Stack>
+      </Box>
+      {menu && <MessageOptions />}
+    </Stack>
+  );
+}
+function GroupDocMsg({ el, menu }) {
+  const handleDownload = () => {
+    const documentUrl = el.docUrl;
+    console.log(documentUrl);
+    const anchor = document.createElement("a");
+
+    anchor.href = documentUrl;
+
+    anchor.download = `${el.docUrl.split("/").pop()}`;
+
+    document.body.appendChild(anchor);
+
+    anchor.click();
+
+    document.body.removeChild(anchor);
+  };
+  return (
+    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+      <Box
+        p={1.5}
+        sx={{
+          backgroundColor: el.incoming ? "background.paper" : "primary.main",
+          borderRadius: 1.5,
+          width: "max-conten",
+        }}
+      >
+        <Stack spacing={2}>
+          <Stack
+            alignItems={"center"}
+            spacing={3}
+            p={2}
+            sx={{
+              backgroundColor: "background.paper",
+              borderRadius: 1.5,
+              borderLeft: "2px solid primary.main",
+            }}
+          >
+            <Typography variant="body2" color={"text"}>
+              {el.sender_name}
+            </Typography>
+          </Stack>
+          <Stack
+            p={2}
+            spacing={3}
+            alignItems={"center"}
+            direction={"row"}
+            sx={{ backgroundColor: "background.default", borderRadius: 1 }}
+          >
+            <File size={48} />
+            <Typography variant="caption">
+              {el.docUrl.split("/").pop()}
+            </Typography>
+            <IconButton onClick={handleDownload}>
+              <DownloadSimple />
+            </IconButton>
+          </Stack>
+        </Stack>
+      </Box>
+      {menu && <MessageOptions />}
     </Stack>
   );
 }
 
-function MediaMsg({ el,menu }) {
+function MediaMsg({ el, menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -171,21 +331,18 @@ function MediaMsg({ el,menu }) {
       >
         <Stack spacing={1}>
           <img
-            src={el.img}
+            src={el.imgUrl}
             alt={el.message}
             style={{ maxHeight: 210, borderRadius: "10px" }}
           />
         </Stack>
-        <Typography variant="body2" color={el.incoming ? "text" : "white"}>
-          {el.message}
-        </Typography>
       </Box>
-      {menu && <MessageOptions/>}
+      {menu && <MessageOptions />}
     </Stack>
   );
 }
 
-function TextMsg({ el,menu }) {
+function TextMsg({ el, menu }) {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -200,7 +357,7 @@ function TextMsg({ el,menu }) {
           {el.message}
         </Typography>
       </Box>
-      {menu && <MessageOptions/>}
+      {menu && <MessageOptions />}
     </Stack>
   );
 }
@@ -256,8 +413,12 @@ const MessageOptions = () => {
         }}
       >
         <Stack spacing={1} px={1}>
-          {Message_options?.map((el)=>{
-            return  <MenuItem onClick={handleClose} key={el.title}>{el.title}</MenuItem>
+          {Message_options?.map((el) => {
+            return (
+              <MenuItem onClick={handleClose} key={el.title}>
+                {el.title}
+              </MenuItem>
+            );
           })}
         </Stack>
       </Menu>
@@ -265,4 +426,4 @@ const MessageOptions = () => {
   );
 };
 
-export { Timeline, TextMsg, MediaMsg, ReplyMsg, LinkMsg, Docmsg,GroupMsg };
+export { Timeline, TextMsg, MediaMsg, ReplyMsg, LinkMsg, Docmsg, GroupMsg ,GroupLinkMsg,GroupImgMsg,GroupDocMsg};

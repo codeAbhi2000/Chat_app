@@ -110,7 +110,7 @@ function Profile() {
       },
     })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
       })
       .catch((err) => {

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const FriendRequests = require("../models/friendRequest");
+const Chatting = require("../models/chatting");
 
 exports.getAllVerifiedUsers = (req, res, next) => {
   const uid = req.params.id;
@@ -90,7 +91,7 @@ exports.updateProfile = (req,res,next)=>{
 
   const profilePicData = profiLePic?.data
 
-  console.log(name,about,uid,profiLePic);
+  // console.log(name,about,uid,profiLePic);
   
 
   User.updateProfile(profilePicData,about,name,uid,(err,result)=>{
@@ -107,4 +108,21 @@ exports.updateProfile = (req,res,next)=>{
     });
   })
 
+}
+
+
+exports.getSharedMessages = (req,res,next)=>{
+  const chat_id = req.params.id
+  Chatting.getSharedMessages(chat_id,(err,result)=>{
+    if(err){
+     return res.status(401).json({
+        status:"error",
+        msg : "something went wrong"
+      })
+    }
+    res.status(200).json({
+      status:"success",
+      data:result
+    })
+  })
 }

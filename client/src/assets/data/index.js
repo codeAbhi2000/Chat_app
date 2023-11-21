@@ -33,11 +33,6 @@ const Nav_Buttons = [
   },
   {
     index: 2,
-    icon: <CircleDashed />,
-    link:'updates'
-  },
-  {
-    index: 3,
     icon: <GearSix />,
     link:'settings'
   },

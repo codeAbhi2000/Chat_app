@@ -63,7 +63,7 @@ export function loginUseer(inputvalues) {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(
           slice.actions.login({
             isLoggedIn: true,
@@ -104,7 +104,7 @@ export function forgotPassword(inputData) {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(openSnackBar({ severity: "info", message: res?.data.msg }));
       })
       .catch((err) => {
@@ -133,7 +133,7 @@ export function resetPassowrd(inputData) {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
       })
       .catch((err) => {
@@ -159,7 +159,7 @@ export function registerUser(inputData) {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(
           slice.actions.updateRegisterUserEmail({ email: inputData.email })
         );
@@ -188,7 +188,7 @@ export function verifyUser(inputData) {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
       })
       .catch((err) => {

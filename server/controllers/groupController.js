@@ -17,7 +17,7 @@ exports.createGroup = (req, res, next) => {
 
   const grpmbr = members.split(",").map(member => parseInt(member));
 
-  console.log(grpName, tagline, admin, grpmbr, groupIconFile);
+  // console.log(grpName, tagline, admin, grpmbr, groupIconFile);
 
   const jadmin = JSON.stringify([admin])
 
@@ -101,4 +101,20 @@ exports.removeGroupParticipants = (req,res,next)=>{
   })
 }
 
+
+exports.getGrpSharedMessages = (req,res,next)=>{
+  const group_id = req.params.id 
+  Group.getGroupSharedMessages(group_id,(err,result)=>{
+    if(err){
+      return res.status(401).json({
+         status:"error",
+         msg : "something went wrong"
+       })
+     }
+     res.status(200).json({
+       status:"success",
+       data:result
+     })
+  })
+}
 

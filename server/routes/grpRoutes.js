@@ -11,6 +11,7 @@ router.get('/getParticipantsDetails/:group_id',validator,grpController.getPartic
 router.post('/makeAdmin',validator,grpController.makeAdmin)
 router.post('/dismissAdmin',validator,grpController.disMissAdmin)
 router.post('/removeGroupParticipants',validator,grpController.removeGroupParticipants)
+router.get('/getGrpSharedMsg/:id',validator,grpController.getGrpSharedMessages)
 
 
 module.exports = router

@@ -162,7 +162,7 @@ function Conatct() {
   };
 
   const removeParticipants = (id) => {
-    console.log("from reove", id);
+    // console.log("from reove", id);
     Axios.post(
       "http://13.126.35.197:5000/user/removeGroupParticipants",
       {

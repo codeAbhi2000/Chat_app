@@ -93,7 +93,7 @@ function CreateGrpDialog({ open, handleClose }) {
     //   formData.append(`members[${index}]`, member);
     // });
 
-    console.log("Sending data to backend:", formData);
+    // console.log("Sending data to backend:", formData);
 
     try {
       const response = await Axios.post(
@@ -106,7 +106,7 @@ function CreateGrpDialog({ open, handleClose }) {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       socket.emit("create_group_room", {
         groupId: response.data.grpId,
         user_id: uid,

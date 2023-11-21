@@ -5,10 +5,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import Conversation from "../components/Conversation";
 import Contact from "../components/Contact";
 import { useDispatch, useSelector } from "react-redux";
-
 import SharedMsg from "../components/SharedMsg";
 import { connectSocket, socket } from "../socket";
-import { AddGroupIds, openSnackBar, selectChat } from "../redux/slices/app";
+import {  openSnackBar, selectChat } from "../redux/slices/app";
 import poster from "../assets/iamges/Conversation-pana.png";
 import {
   AddConversation,
@@ -20,6 +19,7 @@ import SnackbarAlert from "../components/Snackbar";
 
 function DashBoard() {
   const theme = useTheme();
+  
   const dispatch = useDispatch();
   const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
   const { groupsYouIn } = useSelector((state) => state.auth);
@@ -108,6 +108,8 @@ function DashBoard() {
               chat_id: data.data.chat_id,
               type: data.data.type,
               time: createTimeStamp(),
+              imgUrl : data.data.imageUrl,
+              docUrl : data.data.docUrl,
               message: data.data.message,
               incoming: data.data.to === uid,
               outgoing: data.data.from === uid,
@@ -140,6 +142,8 @@ function DashBoard() {
                 data.from_user_id === uid ? "You" : data.from_user_name,
               message: data.message,
               message_time: createTimeStamp(),
+              imgUrl : data.imageUrl,
+              docUrl : data.docUrl,
               incoming: data.from_user_id !== uid,
               outgoing: data.from_user_id === uid,
             })

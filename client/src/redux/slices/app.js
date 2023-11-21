@@ -114,7 +114,7 @@ export function getAllOtherUser() {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(slice.actions.updateUsers({ users: res.data.data }));
       })
       .catch((err) => {
@@ -135,7 +135,7 @@ export function getFriends() {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(slice.actions.updateFriends({ friends: res.data.data }));
       })
       .catch((err) => {
@@ -155,7 +155,7 @@ export function getFriendRequests() {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(
           slice.actions.updateRequests({
             requests: res.data.data ? res.data.data : [],
@@ -186,7 +186,7 @@ export function getAllUsers() {
       }
     )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch(slice.actions.upDateOtherUser({ allUsers: res.data.data }));
       })
       .catch((err) => {

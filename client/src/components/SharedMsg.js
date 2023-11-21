@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Stack,
@@ -9,21 +9,137 @@ import {
   Tabs,
   Grid,
 } from "@mui/material";
-import { ArrowCircleLeft } from "phosphor-react";
-import { useDispatch } from "react-redux";
-import {  updateSidebarType } from "../redux/slices/app";
-import { faker } from "@faker-js/faker";
-import { SHARED_Docs, SHARED_Links } from "../assets/data";
-import { Docmsg, LinkMsg } from "./MessageTypes";
+import {
+  ArrowCircleLeft,
+  DownloadSimple,
+  File,
+  LinkBreak,
+} from "phosphor-react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateSidebarType } from "../redux/slices/app";
+
+import Axios from "axios";
 
 function SharedMsg() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
+  const [PrivateSharedMsg, setPrivateSharedMsg] = useState({
+    links: null,
+    docs: null,
+    imgs: null,
+  });
+  const [GroupSharedMsg, setGroupSharedMsg] = useState({
+    links: null,
+    docs: null,
+    imgs: null,
+  });
+
+  const { room_id, chat_type } = useSelector((state) => state.app);
+  const { token } = useSelector((state) => state.auth);
+
+  const getPrivateSharedMessages = () => {
+    Axios.get(`http://13.126.35.197:5000/user/getSharedMsg/${room_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    })
+      .then((res) => {
+        // console.log(res);
+        setPrivateSharedMsg({
+          links: res.data.data
+            .map((el) =>
+              el.text !== null ? { link: el.text, date: el.created_at } : null
+            )
+            .filter(Boolean),
+          imgs: res.data.data
+            .map((el) =>
+              el.imagefile !== null
+                ? { imgUrl: el.imagefile, date: el.created_at }
+                : null
+            )
+            .filter(Boolean),
+          docs: res.data.data
+            .map((el) =>
+              el.docfile !== null
+                ? { docUrl: el.docfile, date: el.created_at }
+                : null
+            )
+            .filter(Boolean),
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getGroupSharedMessages = () => {
+    Axios.get(`http://13.126.35.197:5000/user/getGrpSharedMsg/${room_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    })
+      .then((res) => {
+        // console.log(res);
+        setGroupSharedMsg({
+          links: res.data.data
+            .map((el) =>
+              el.text !== null ? { link: el.text, date: el.created_at } : null
+            )
+            .filter(Boolean),
+          imgs: res.data.data
+            .map((el) =>
+              el.imagefile !== null
+                ? { imgUrl: el.imagefile, date: el.created_at }
+                : null
+            )
+            .filter(Boolean),
+          docs: res.data.data
+            .map((el) =>
+              el.docfile !== null
+                ? { docUrl: el.docfile, date: el.created_at }
+                : null
+            )
+            .filter(Boolean),
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // console.log(PrivateSharedMsg,GroupSharedMsg);
+
+  const handleDownload = (docUrl) => {
+    const documentUrl = docUrl;
+    console.log(documentUrl);
+    const anchor = document.createElement("a");
+
+    anchor.href = documentUrl;
+
+    anchor.download = `${docUrl.split("/").pop()}`;
+
+    document.body.appendChild(anchor);
+
+    anchor.click();
+
+    document.body.removeChild(anchor);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    if (chat_type === "individual") {
+      getPrivateSharedMessages();
+    } else {
+      getGroupSharedMessages();
+    }
+  }, [chat_type]);
+
   return (
     <Box sx={{ height: "100vh", width: { sm: 320, xs: "100%" } }}>
       <Stack sx={{ height: "100%", width: "100%" }}>
@@ -75,40 +191,110 @@ function SharedMsg() {
             position: "relative",
             flexGrow: 1,
             overflowY: "scroll",
-            width:{ sm: 320, xs: "100%" },
+            width: { sm: 320, xs: "100%" },
           }}
           p={value === 0 ? 2 : 1}
-          
         >
           {(() => {
             switch (value) {
               case 0:
                 return (
                   <Grid container spacing={2}>
-                    {[0, 1, 2, 3, 4, 5].map((e, i) => {
+                    {(chat_type === "individual"
+                      ? PrivateSharedMsg.imgs
+                      : GroupSharedMsg.imgs
+                    )?.map((e, i) => {
                       return (
-                        <Grid item  sm={4} key={i}>
-                          <img
-                            src={faker.image.avatar()}
-                            alt={faker.name.fullName()}
-                            width={"100%"}
-                          />
+                        <Grid item sm={4} key={i}>
+                          <img src={e?.imgUrl} alt={"img"} width={"100%"} />
                         </Grid>
                       );
                     })}
                   </Grid>
                 );
               case 1:
-                return SHARED_Links.map((el) => (
-                  <Stack alignItems={"center"} p={1} width={"80%"}>
-                    <LinkMsg el={el} />
-                  </Stack>
+                return (
+                  chat_type === "individual"
+                    ? PrivateSharedMsg.links
+                    : GroupSharedMsg.links
+                )?.map((el) => (
+                  <Box
+                    sx={{
+                      width: "100%",
+                      borderRadius: 1,
+                      backgroundColor: "background.paper",
+                    }}
+                  >
+                    <Stack
+                      alignItems={"center"}
+                      direction={"row"}
+                      spacing={2}
+                      p={1}
+                    >
+                      <Stack alignItems={"center"} justifyContent={"center"}>
+                        <LinkBreak />
+                      </Stack>
+                      <Stack alignItems={"center"} justifyContent={"center"}>
+                        <Typography variant="caption">{el?.link}</Typography>
+                      </Stack>
+                      <Stack alignItems={"center"} justifyContent={"center"}>
+                        <Typography variant="caption">
+                          {el?.date.slice(0, 10)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </Box>
                 ));
 
               case 2:
-                return SHARED_Docs.map((el) => <Docmsg el={el} />);
+                return (
+                  chat_type === "individual"
+                    ? PrivateSharedMsg.docs
+                    : GroupSharedMsg.docs
+                )?.map((el) => {
+                  return (
+                    <Box
+                      sx={{
+                        width: "100%",
+                        borderRadius: 1,
+                        backgroundColor: "background.paper",
+                      }}
+                    >
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        spacing={2}
+                        p={1}
+                      >
+                        <Stack alignItems={"center"} justifyContent={"center"}>
+                          <File />
+                        </Stack>
+                        <Stack
+                          alignItems={"center"}
+                          spacing={1}
+                          direction={"row"}
+                        >
+                          <Typography variant="caption">
+                            {el?.docUrl?.split("/").pop()}
+                          </Typography>
+                          <IconButton
+                            onClick={() => handleDownload(el?.docUrl)}
+                          >
+                            <DownloadSimple />
+                          </IconButton>
+                        </Stack>
+                        <Stack alignItems={"center"} justifyContent={"center"}>
+                          <Typography variant="caption">
+                            {el?.date.slice(0, 10)}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                    </Box>
+                  );
+                });
 
-               default :<></> 
+              default:
+                <></>;
             }
           })()}
         </Stack>

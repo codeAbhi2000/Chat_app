@@ -9,7 +9,7 @@ class Group {
 
     const participants = fparticipants; // Adjust the array based on the number of participants
 
-    console.log(grpDetails, fparticipants);
+    // console.log(grpDetails, fparticipants);
     // Execute the queries
     db.query(
       createGroupSQL,
@@ -69,6 +69,8 @@ class Group {
     gm.from_user_id,
     gm.text AS message,
     gm.created_at AS message_time,
+    gm.imagefile AS imageUrl ,
+    gm.docfile AS docUrl,
     u.name AS from_user_name
     FROM group_messages gm
     JOIN group_participants gp ON gm.group_id = gp.group_id
@@ -83,6 +85,18 @@ class Group {
     const sql =
       "INSERT INTO group_messages (group_id, from_user_id, type, text) VALUES (?, ?, ?, ?)";
     db.query(sql, [group_id, from_user_id, type, text], callback);
+  }
+
+  static addGroupImageMessages(group_id, from_user_id, type, fileUrl, callback) {
+    const sql =
+      "INSERT INTO group_messages (group_id, from_user_id, type, imagefile) VALUES (?, ?, ?, ?)";
+    db.query(sql, [group_id, from_user_id, type, fileUrl], callback);
+  }
+
+  static addGroupDocMessages(group_id, from_user_id, type, fileUrl, callback) {
+    const sql =
+      "INSERT INTO group_messages (group_id, from_user_id, type, docfile) VALUES (?, ?, ?, ?)";
+    db.query(sql, [group_id, from_user_id, type, fileUrl], callback);
   }
 
   static getParticipants(group_id, callback) {
@@ -183,6 +197,13 @@ class Group {
         }
       }
     });
+  }
+  static getGroupSharedMessages(group_id,callback){
+      const sql = ` SELECT imagefile, docfile, created_at, text
+      FROM group_messages
+      WHERE group_id = ?
+        AND (type = 'Img' OR type = 'Doc' OR type= "Link");`
+      db.query(sql,[group_id],callback)
   }
 }
 

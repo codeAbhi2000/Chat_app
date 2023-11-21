@@ -8,7 +8,7 @@ import DashBoard from "./pages/DashBoard";
 import ChatList from "./components/ChatList";
 import GroupList from "./components/GroupList";
 import Settings from "./components/Settings";
-import Updates from "./components/Updates";
+
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Profile from "./components/Profile";
@@ -34,7 +34,7 @@ function App() {
           <Route path="chats" element={<ChatList />} />
           <Route path="groups" element={<GroupList />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="updates" element={<Updates />} />
+          
           <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>

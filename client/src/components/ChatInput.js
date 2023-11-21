@@ -24,7 +24,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const ChatInput = ({ setopenPicker, setValue, value, inputRef }) => {
+const ChatInput = ({ setopenPicker, setValue, value, inputRef, setMessageType,handleFileChange }) => {
   const [openActionBtn, setopenActionBtn] = useState(false);
   return (
     <StyledTextField
@@ -32,13 +32,14 @@ const ChatInput = ({ setopenPicker, setValue, value, inputRef }) => {
     value={value}
     onChange={(event) => {
       setValue(event.target.value);
+      setMessageType("Text")
     }}
       fullWidth
       placeholder="Write a message..."
       InputProps={{
         startAdornment: (
           <Stack sx={{ width: "max-conten" }}>
-            <ActionButtons openActionBtn={openActionBtn} />
+            <ActionButtons openActionBtn={openActionBtn} setMessageType = {setMessageType} handleFileChange = {handleFileChange} />
             <InputAdornment>
               <IconButton
                 onClick={() => {

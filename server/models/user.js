@@ -6,7 +6,7 @@ class User {
     db.query(sql, [email], callback);
   }
   static findById(uid, callback) {
-    console.log(uid);
+    // console.log(uid);
     const sql = "SELECT * FROM users WHERE _id = ?";
     db.query(sql, [uid], callback);
   }
@@ -61,7 +61,7 @@ class User {
   }
 
   static updateFriendList(fid, uid, callback) {
-    console.log(fid,uid);
+    // console.log(fid,uid);
     const sql =
       "UPDATE users SET friends = JSON_ARRAY_APPEND(friends, '$', ?) WHERE _id = ? ";
     db.query(sql, [fid, uid], callback);

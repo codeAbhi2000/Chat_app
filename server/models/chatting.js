@@ -1,4 +1,5 @@
 const db = require("../utils/database");
+const mysql = require('mysql2');
 
 class Chatting {
     static createChat(userId1, userId2, callback) {
@@ -63,18 +64,28 @@ class Chatting {
     db.query(messageInsertSQL, [chatId, senderUserId,recipientUserId,msgType, messageText], callback);
   }
 
+  static sendImageMessage(chatId, senderUserId,recipientUserId, fileUrl,callback){
+    const sql = `INSERT INTO messages (chat_id, from_user_id ,to_user_id,type ,created_at, imagefile) VALUES (?,?,?,?,NOW(),?)`
+    db.query(sql , [chatId,senderUserId,recipientUserId,"Img",fileUrl],callback)
+  }
+
+  static sendDocMessage(chatId, senderUserId,recipientUserId, fileUrl,callback){
+    const sql = `INSERT INTO messages (chat_id, from_user_id ,to_user_id,type ,created_at, docfile) VALUES (?,?,?,?,NOW(),?)`
+    db.query(sql , [chatId,senderUserId,recipientUserId,"Doc",fileUrl],callback)
+  }
+
   static getConversation(userId,chat_id,callback){
     const sql = `
     SELECT DISTINCT m.id AS message_id, m.chat_id, m.from_user_id, m.to_user_id ,m.text, m.created_at AS message_time,
     u._id AS user_id, u.name AS username,
-    CASE WHEN m.from_user_id = ? THEN 'Sent' ELSE 'Received' END AS message_type
+    m.type AS message_type ,m.imagefile AS imageUrl ,m.docfile AS docUrl
     FROM messages m
     JOIN participants p ON m.chat_id = p.chat_id
     JOIN users u ON m.from_user_id = u._id
     WHERE p.chat_id = ? 
     ORDER BY m.created_at
     `
-    db.query(sql,[userId,chat_id],callback)
+    db.query(sql,[chat_id],callback)
   }
 
   static checkForExistingChat(fromId,toId,callback){
@@ -96,6 +107,15 @@ class Chatting {
     ) AND u._id = ?;
     `
     db.query(sql,[fromId,toId,toId],callback)
+  }
+
+  static getSharedMessages(chat_id,callback){
+    const sql = `SELECT imagefile, docfile, created_at, text
+    FROM messages
+    WHERE chat_id = ?
+      AND (type = 'Img' OR type = 'Doc' OR type= "Link")`
+    db.query(sql,[chat_id],callback)
+
   }
 }
 

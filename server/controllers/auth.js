@@ -28,9 +28,9 @@ exports.signup = (req, res, next) => {
             if (err) {
               res.status(500).json({ error: "User registration failed" });
             } else {
-              console.log(result);
+              // console.log(result);
               const insertedId = result.insertId;
-              console.log(insertedId);
+              // console.log(insertedId);
 
               res.locals.uid = insertedId;
               req.email = email
@@ -46,7 +46,7 @@ exports.signup = (req, res, next) => {
 exports.sentOtp = (req, res, next) => {
   const email = req.email
   const id = res.locals.uid;
-  console.log(id,email);
+  // console.log(id,email);
   const otp = otpGenerator.generate(6, {
     upperCaseAlphabets: false,
     lowerCaseAlphabets: false,
@@ -63,7 +63,7 @@ exports.sentOtp = (req, res, next) => {
       });
     }
 
-    console.log(result);
+    // console.log(result);
   });
   const template = generatOtptmp(otp); // Implement this function
 
@@ -94,9 +94,9 @@ exports.sentOtp = (req, res, next) => {
 
 exports.verifyOTP = async (req, res, next) => {
   const { email, otp } = req.body;
-  console.log(otp, email);
+  // console.log(otp, email);
   User.findByEmail(email, (err, result) => {
-    console.log(result);
+    // console.log(result);
     if (err) {
       res.status(500).json({
         status: "error",
@@ -180,7 +180,7 @@ exports.forgotPassword = async (req, res) => {
         exp: Math.floor(Date.now() / 1000) + 600,
       };
       const authToken = jwt.sign(payload, secretKey);
-      const url = `http://localhost:3000/resetPassword/${user[0]._id}/${authToken}`;
+      const url = `http://13.126.35.197:5000/resetPassword/${user[0]._id}/${authToken}`;
 
       const template = genResetMailTemp(url);
 
