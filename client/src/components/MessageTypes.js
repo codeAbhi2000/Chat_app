@@ -2,13 +2,12 @@ import {
   Box,
   Divider,
   IconButton,
-  Link,
   Menu,
   MenuItem,
   Stack,
   Typography,
 } from "@mui/material";
-import { DotsThreeVertical, DownloadSimple, File, Image } from "phosphor-react";
+import { DotsThreeVertical, DownloadSimple, File} from "phosphor-react";
 import React from "react";
 import { Message_options } from "../assets/data";
 
@@ -84,10 +83,11 @@ function LinkMsg({ el, menu }) {
               src={el.message}
               alt={el.message}
               style={{ borderRadius: "10px", maxHeight: 210 }}
+              title="linkPreview"
             />
 
             <Typography variant="body2" color={el.incoming ? "text" : "white"}>
-              <a href={el.message} target="_blank">
+              <a href={el.message} target="_blank" rel="noreferrer">
                 click
               </a>
             </Typography>
@@ -202,10 +202,11 @@ function GroupLinkMsg({ el, menu }) {
               src={el.message}
               alt={el.message}
               style={{ borderRadius: "10px", maxHeight: 210 }}
+              title="LinkpReview"
             />
 
             <Typography variant="body2" color={el.incoming ? "text" : "white"}>
-              <a href={el.message} target="_blank">
+              <a href={el.message} target="_blank" rel="noreferrer">
                 click
               </a>
             </Typography>
@@ -246,7 +247,7 @@ function GroupImgMsg({ el, menu }) {
             <img
               src={el.imgUrl}
               alt={el.message}
-              style={{ maxHeight: 210, borderRadius: "10px" }}
+              style={{ maxHeight: 100, borderRadius: "10px" }}
             />
           </Stack>
         </Stack>
@@ -333,7 +334,7 @@ function MediaMsg({ el, menu }) {
           <img
             src={el.imgUrl}
             alt={el.message}
-            style={{ maxHeight: 210, borderRadius: "10px" }}
+            style={{ maxHeight: 100, borderRadius: "10px" }}
           />
         </Stack>
       </Box>
