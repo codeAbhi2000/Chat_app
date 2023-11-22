@@ -27,7 +27,7 @@ const reactPath = path.join(_dirname,'../client/build')
 
 app.use(express.static(reactPath))
 
-app.get('/',(req,res)=>{
+const htmlFiles = (req,res)=>{
     res.sendFile(
         path.join(__dirname,"../client/build/index.html"),(err)=>{
             if(err){
@@ -35,17 +35,19 @@ app.get('/',(req,res)=>{
             }
         }
     )
-})
+}
 
-app.get('/resetPassword/:userId/:token',(req,res)=>{
-    res.sendFile(
-        path.join(__dirname,"../client/build/index.html"),(err)=>{
-            if(err){
-                res.status(500).send(err)
-            }
-        }
-    )
-})
+app.get('/',htmlFiles)
+app.get('/login',htmlFiles)
+app.get('/register',htmlFiles)
+app.get('/forgotPassword',htmlFiles)
+app.get('/resetPassword/:uid/:token',htmlFiles)
+app.get('/enterOTP',htmlFiles)
+app.get('/dashboard',htmlFiles)
+app.get('/dashboard/profile',htmlFiles)
+app.get('/dashboard/settings',htmlFiles)
+app.get('/dashboard/chats',htmlFiles)
+app.get('/dashboard/groups',htmlFiles)
 
 
 
