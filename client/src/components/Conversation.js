@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import StyledBadge from "./StyledBadge";
-import { faker } from "@faker-js/faker";
+
 import SearchBar from "./SearchBar";
 import { PaperPlaneTilt } from "phosphor-react";
 import Messages from "./Messages";

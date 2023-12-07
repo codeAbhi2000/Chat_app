@@ -17,7 +17,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { PlusCircle, XCircle } from "phosphor-react";
-import { faker } from "@faker-js/faker";
+
 import { useDispatch, useSelector } from "react-redux";
 import Axios from "axios";
 import { getAllUsers, openSnackBar } from "../redux/slices/app";

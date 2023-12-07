@@ -14,7 +14,7 @@ import {
   DialogContent,
 } from "@mui/material";
 import { Camera, CaretLeft } from "phosphor-react";
-import { faker } from "@faker-js/faker";
+
 import { useDispatch, useSelector } from "react-redux";
 import Axios from "axios";
 import { openSnackBar } from "../redux/slices/app";

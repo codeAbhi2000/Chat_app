@@ -11,7 +11,7 @@ import {
 
 import logo from "../assets/iamges/chatting.png";
 import MaterialUISwitch from "./AntSwitch";
-import { faker } from "@faker-js/faker";
+
 import ThemeContext from "../context/ThemeContext";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";

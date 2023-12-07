@@ -27,7 +27,7 @@ import {
   toggleSidebar,
   updateSidebarType,
 } from "../redux/slices/app";
-import { faker } from "@faker-js/faker";
+
 import DialogAlert from "./DialogAlert";
 import Axios from "axios";
 import AllUsersDlg from "./AllUsersDlg";
@@ -313,8 +313,8 @@ function Conatct() {
               return (
                 <Box sx={{ height: 70, width: 70 }} key={i}>
                   <img
-                    src={faker.image.food()}
-                    alt={faker.name.fullName()}
+                    src={""}
+                    alt={"names"}
                     width={"100%"}
                   />
                 </Box>
@@ -327,8 +327,8 @@ function Conatct() {
               <Typography variant="subtitle2">1 group in common</Typography>
               <Stack direction={"row"} spacing={2} alignItems={"center"}>
                 <Avatar
-                  src={faker.image.avatar()}
-                  alt={faker.name.fullName()}
+                  src={''}
+                  alt={"photo"}
                 />
                 <Stack spacing={0.5}>
                   <Typography variant="subtitle2">School Group</Typography>
