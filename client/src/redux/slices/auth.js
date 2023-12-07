@@ -52,7 +52,7 @@ export default slice.reducer;
 export function loginUseer(inputvalues) {
   return async (dispatch, getState) => {
     Axios.post(
-      "http://13.126.35.197:5000/auth/login",
+      "https://chatapp-production-cc0a.up.railway.app/auth/login",
       {
         ...inputvalues,
       },
@@ -93,7 +93,7 @@ export function logoutUser() {
 export function forgotPassword(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "http://13.126.35.197:5000/auth/forgotPassword",
+      "https://chatapp-production-cc0a.up.railway.app/auth/forgotPassword",
       {
         ...inputData,
       },
@@ -120,7 +120,7 @@ export function resetPassowrd(inputData) {
   const { uid, password, token } = inputData;
   return (dispatch, getState) => {
     Axios.post(
-      "http://13.126.35.197:5000/auth/resetPassword",
+      "https://chatapp-production-cc0a.up.railway.app/auth/resetPassword",
       {
         uid: uid,
         pass: password,
@@ -148,7 +148,7 @@ export function resetPassowrd(inputData) {
 export function registerUser(inputData) {
   return async (dispatch, getState) => {
     Axios.post(
-      "http://13.126.35.197:5000/auth/register",
+      "https://chatapp-production-cc0a.up.railway.app/auth/register",
       {
         ...inputData,
       },
@@ -177,7 +177,7 @@ export function registerUser(inputData) {
 export function verifyUser(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "http://13.126.35.197:5000/auth/verifyOtp",
+      "https://chatapp-production-cc0a.up.railway.app/auth/verifyOtp",
       {
         ...inputData,
       },

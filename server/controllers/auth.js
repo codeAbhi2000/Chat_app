@@ -33,7 +33,7 @@ exports.signup = (req, res, next) => {
               // console.log(insertedId);
 
               res.locals.uid = insertedId;
-              req.email = email
+              req.email = email;
               next();
             }
           });
@@ -44,7 +44,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.sentOtp = (req, res, next) => {
-  const email = req.email
+  const email = req.email;
   const id = res.locals.uid;
   // console.log(id,email);
   const otp = otpGenerator.generate(6, {
@@ -70,7 +70,7 @@ exports.sentOtp = (req, res, next) => {
   //   console.log(template);
   const mailOptions = {
     from: "abhishekvvet@gmail.com",
-    to:(email).toString(), // Make sure you have the 'email' variable defined
+    to: email.toString(), // Make sure you have the 'email' variable defined
     subject: "Your OTP for Account Verification",
     html: template,
   };
@@ -152,7 +152,14 @@ exports.login = (req, res) => {
             secretKey,
             { expiresIn: "1h" }
           );
-          res.status(200).json({ token, msg: "Logged in successfull",uid:user._id ,profile:{...user}});
+          res
+            .status(200)
+            .json({
+              token,
+              msg: "Logged in successfull",
+              uid: user._id,
+              profile: { ...user },
+            });
         }
       });
     }
@@ -164,12 +171,11 @@ exports.forgotPassword = async (req, res) => {
 
   User.findByEmail(email, (err, user) => {
     // console.log(user);
-    if(err){
+    if (err) {
       res.status(500).json({
         msg: "Something went wrong",
       });
-    }
-    else if (user.length === 0) {
+    } else if (user.length === 0) {
       res.status(404).json({
         msg: "Email does not exists",
       });
@@ -180,7 +186,7 @@ exports.forgotPassword = async (req, res) => {
         exp: Math.floor(Date.now() / 1000) + 600,
       };
       const authToken = jwt.sign(payload, secretKey);
-      const url = `http://13.126.35.197:5000/resetPassword/${user[0]._id}/${authToken}`;
+      const url = `https://chatapp-production-cc0a.up.railway.app/resetPassword/${user[0]._id}/${authToken}`;
 
       const template = genResetMailTemp(url);
 
@@ -207,25 +213,23 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res, next) => {
-  const { uid, pass } = req.body
+  const { uid, pass } = req.body;
 
-    console.log(uid, pass);
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(pass, salt)
+  console.log(uid, pass);
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(pass, salt);
 
-    User.resetPassowrd(uid,hashedPassword,(err,result)=>{
-      if(err){
-        res.status(500).json({
-          status:'error',
-          msg:'Somethinf went wrong'
-        })
-      }
-      
-      res.status(200).json({
-        status:'success',
-        msg:"Password reset successful",
-       
-      })
-    })
-    
+  User.resetPassowrd(uid, hashedPassword, (err, result) => {
+    if (err) {
+      res.status(500).json({
+        status: "error",
+        msg: "Somethinf went wrong",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      msg: "Password reset successful",
+    });
+  });
 };

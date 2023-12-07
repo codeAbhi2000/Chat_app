@@ -39,12 +39,15 @@ function SharedMsg() {
   const { token } = useSelector((state) => state.auth);
 
   const getPrivateSharedMessages = () => {
-    Axios.get(`http://13.126.35.197:5000/user/getSharedMsg/${room_id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    })
+    Axios.get(
+      `https://chatapp-production-cc0a.up.railway.app/user/getSharedMsg/${room_id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      }
+    )
       .then((res) => {
         // console.log(res);
         setPrivateSharedMsg({
@@ -75,12 +78,15 @@ function SharedMsg() {
   };
 
   const getGroupSharedMessages = () => {
-    Axios.get(`http://13.126.35.197:5000/user/getGrpSharedMsg/${room_id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    })
+    Axios.get(
+      `https://chatapp-production-cc0a.up.railway.app/user/getGrpSharedMsg/${room_id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      }
+    )
       .then((res) => {
         // console.log(res);
         setGroupSharedMsg({

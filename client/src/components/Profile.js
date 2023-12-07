@@ -103,12 +103,16 @@ function Profile() {
     formData.append("name", Profiledata.name);
     formData.append("profilePic", Profiledata.profilePic);
     formData.append("uid", uid);
-    Axios.post("http://13.126.35.197:5000/user/updateProfile", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: token,
-      },
-    })
+    Axios.post(
+      "https://chatapp-production-cc0a.up.railway.app/user/updateProfile",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: token,
+        },
+      }
+    )
       .then((res) => {
         // console.log(res);
         dispatch(openSnackBar({ severity: "success", message: res.data.msg }));

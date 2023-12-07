@@ -103,7 +103,7 @@ function Conatct() {
     }
     console.log("this is from make id ", id);
     Axios.post(
-      "http://13.126.35.197:5000/user/makeAdmin",
+      "https://chatapp-production-cc0a.up.railway.app/user/makeAdmin",
       {
         group_id: current_group_conversation?.group_id,
         user_id: id,
@@ -132,7 +132,7 @@ function Conatct() {
     if (current_group_conversation?.group_admin.includes(id?.toString())) {
       console.log("From dismiss admin", id);
       Axios.post(
-        "http://13.126.35.197:5000/user/dismissAdmin",
+        "https://chatapp-production-cc0a.up.railway.app/user/dismissAdmin",
         {
           group_id: current_group_conversation?.group_id,
           user_id: id,
@@ -164,7 +164,7 @@ function Conatct() {
   const removeParticipants = (id) => {
     // console.log("from reove", id);
     Axios.post(
-      "http://13.126.35.197:5000/user/removeGroupParticipants",
+      "https://chatapp-production-cc0a.up.railway.app/user/removeGroupParticipants",
       {
         group_id: current_group_conversation?.group_id,
         user_id: id,
@@ -195,7 +195,7 @@ function Conatct() {
 
   const getParticipants = () => {
     Axios.get(
-      `http://13.126.35.197:5000/user/getParticipantsDetails/${current_group_conversation?.group_id}`,
+      `https://chatapp-production-cc0a.up.railway.app/user/getParticipantsDetails/${current_group_conversation?.group_id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -213,7 +213,7 @@ function Conatct() {
     if (chat_type === "group") {
       getParticipants();
     }
-  }, [makeAdmin,chat_type]);
+  }, [makeAdmin, chat_type]);
 
   return (
     <Box sx={{ height: "100vh", width: { sm: 320, xs: "100%" } }}>
@@ -312,11 +312,7 @@ function Conatct() {
             {[1, 2, 3].map((el, i) => {
               return (
                 <Box sx={{ height: 70, width: 70 }} key={i}>
-                  <img
-                    src={""}
-                    alt={"names"}
-                    width={"100%"}
-                  />
+                  <img src={""} alt={"names"} width={"100%"} />
                 </Box>
               );
             })}
@@ -326,10 +322,7 @@ function Conatct() {
             <>
               <Typography variant="subtitle2">1 group in common</Typography>
               <Stack direction={"row"} spacing={2} alignItems={"center"}>
-                <Avatar
-                  src={''}
-                  alt={"photo"}
-                />
+                <Avatar src={""} alt={"photo"} />
                 <Stack spacing={0.5}>
                   <Typography variant="subtitle2">School Group</Typography>
                   <Typography variant="caption">
