@@ -3,7 +3,6 @@ import {
   ChatCircleDots,
  
   GearSix,
-  CircleDashed,
   SignOut,
   User,
   Users,

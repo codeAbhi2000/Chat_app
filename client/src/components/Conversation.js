@@ -3,7 +3,6 @@ import {
   Avatar,
   Box,
   IconButton,
-  Snackbar,
   Stack,
   Typography,
   useTheme,

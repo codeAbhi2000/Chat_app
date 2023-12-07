@@ -21,7 +21,7 @@ function DashBoard() {
   const theme = useTheme();
   
   const dispatch = useDispatch();
-  const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
+  const { sidebar, room_id} = useSelector((store) => store.app);
   const { groupsYouIn } = useSelector((state) => state.auth);
 
   const { isLoggedIn, uid } = useSelector((store) => store.auth);
@@ -47,7 +47,7 @@ function DashBoard() {
     return combinedDateTime;
   };
 
-  const { conversations, curren_conversation, current_messages } = useSelector(
+  const { conversations, curren_conversation, } = useSelector(
     (state) => state.conversation.direct_chat
   );
 

@@ -12,15 +12,13 @@ import {
   Avatar,
   Tooltip,
   DialogActions,
-  DialogTitle,
-  DialogContentText,
   FormHelperText,
 } from "@mui/material";
 import { PlusCircle, XCircle } from "phosphor-react";
 
 import { useDispatch, useSelector } from "react-redux";
 import Axios from "axios";
-import { getAllUsers, openSnackBar } from "../redux/slices/app";
+import { getAllUsers } from "../redux/slices/app";
 import { socket } from "../socket";
 
 const Transition = React.forwardRef(function Transition(props, ref) {

@@ -4,11 +4,11 @@ import {
   Stack,
   Typography,
   Avatar,
-  Badge,
+
   useTheme,
   alpha,
 } from "@mui/material";
-import StyledBadge from "./StyledBadge";
+
 import { useDispatch, useSelector } from "react-redux";
 import { selectChat } from "../redux/slices/app";
 

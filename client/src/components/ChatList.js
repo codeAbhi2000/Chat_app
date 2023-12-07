@@ -2,7 +2,7 @@ import React ,{useState,useEffect} from "react";
 import { Box, Stack, Typography, Divider, IconButton } from "@mui/material";
 
 import SearchBar from "./SearchBar";
-import { ChatList as List } from "../assets/data";
+
 import ChartElement from "./ChartElement";
 import { Users } from "phosphor-react";
 import Friends from "./Friends";

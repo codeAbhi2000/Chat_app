@@ -1,6 +1,5 @@
 import { Stack, Box, Snackbar } from "@mui/material";
 import React, { useEffect, useRef } from "react";
-import { Chat_History } from "../assets/data";
 import {
   Docmsg,
   GroupDocMsg,
@@ -9,9 +8,9 @@ import {
   GroupMsg,
   LinkMsg,
   MediaMsg,
-  ReplyMsg,
+  
   TextMsg,
-  Timeline,
+
 } from "./MessageTypes";
 import { useSelector } from "react-redux";
 
