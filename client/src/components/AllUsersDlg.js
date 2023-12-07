@@ -29,7 +29,7 @@ function AllUsersDlg({open,handleClose,usersInGrp,adminId,group_id}) {
         dispatch(getAllUsers())
     }
     
-  }, [])
+  }, [allUsers.length])
   
 
   return (

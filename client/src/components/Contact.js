@@ -213,7 +213,7 @@ function Conatct() {
     if (chat_type === "group") {
       getParticipants();
     }
-  }, [makeAdmin]);
+  }, [makeAdmin,chat_type]);
 
   return (
     <Box sx={{ height: "100vh", width: { sm: 320, xs: "100%" } }}>

@@ -86,7 +86,7 @@ function SideBar() {
           spacing={{ xs: 5, sm: 2 }}
         >
           {Nav_Buttons.map((el) => {
-            return el.index == value ? (
+            return parseInt(el.index) === parseInt(value) ? (
               <Box
                 sx={{
                   backgroundColor: theme.palette.primary.main,

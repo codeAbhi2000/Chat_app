@@ -207,7 +207,7 @@ function Conversation() {
       dispatch(openSnackBar({severity:"error",message:"somthinf went wrong"}))
     }
     
-  }, [room_id]);
+  }, [room_id,chat_type]);
 
   return (
     <Box

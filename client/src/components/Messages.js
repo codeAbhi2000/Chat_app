@@ -61,7 +61,7 @@ function Messages({ menu }) {
                 case "Img":
                   return <GroupImgMsg el={el} menu={menu} />;
 
-                default:
+                default: return <></>
                   break;
               }
             })}
