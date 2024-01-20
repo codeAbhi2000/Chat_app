@@ -104,7 +104,7 @@ function Profile() {
     formData.append("profilePic", Profiledata.profilePic);
     formData.append("uid", uid);
     Axios.post(
-      "https://chatapp-production-cc0a.up.railway.app/user/updateProfile",
+      "https://chatapp-production-23a8.up.railway.app/user/updateProfile",
       formData,
       {
         headers: {

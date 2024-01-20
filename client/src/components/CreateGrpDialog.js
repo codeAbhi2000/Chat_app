@@ -95,7 +95,7 @@ function CreateGrpDialog({ open, handleClose }) {
 
     try {
       const response = await Axios.post(
-        "https://chatapp-production-cc0a.up.railway.app/user/createGroup",
+        "https://chatapp-production-23a8.up.railway.app/user/createGroup",
         formData,
         {
           headers: {
