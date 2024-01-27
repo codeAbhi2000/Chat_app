@@ -6,10 +6,26 @@ import bg_mbl from "../assets/iamges/background_mbl.jpeg";
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
 import { PaperPlaneTilt } from "phosphor-react";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { loginUseer } from "../redux/slices/auth";
 
 function Landing() {
   const {isLoggedIn} = useSelector((state)=> state.auth)
+  const dispatch = useDispatch()
+  const handleSubmit = async ()=>{
+    try {
+      console.log('Dispatching loginUser action');
+      await dispatch(loginUseer({email:'vvietmedia.editor@gmail.com',password:'123'}));
+      console.log('Login successful');
+  
+      // After the login action is completed, navigate to the dashboard
+      console.log('Navigating to /dashboard');
+     
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+
+  }
   
  if(!isLoggedIn){ return (
     <Container
@@ -69,12 +85,16 @@ function Landing() {
               </Stack>
               <Stack
                 alignItems={"center"}
-                justifyContent={{sm :"start",xs:'center'}}
-                direction={"row"}
-                width={"90%"}
+                justifyContent={'space-evenly'}
+                direction={{sm:"row",xs:'column'}}
+                width={"60%"}
+                height={'20vh'}
               >
                {!isLoggedIn ? <Button variant="contained" endIcon={<PaperPlaneTilt />}>
                   <Link to="/login">Start Messaging</Link>
+                </Button> : null}
+               {!isLoggedIn ? <Button variant="contained" onClick={handleSubmit} endIcon={<PaperPlaneTilt />}>
+                  Try a demo
                 </Button> : null}
               </Stack>
             </Stack>
