@@ -105,7 +105,7 @@ export function closeSnackBar() {
 export function getAllOtherUser() {
   return async (dispatch, getState) => {
     Axios.get(
-      `https://chatapp-production-23a8.up.railway.app/user/getOtherUsers/${
+      `https://chat-app-pa3b.onrender.com/user/getOtherUsers/${
         getState().auth.uid
       }`,
       {
@@ -128,7 +128,7 @@ export function getAllOtherUser() {
 export function getFriends() {
   return async (dispatch, getState) => {
     Axios.get(
-      `https://chatapp-production-23a8.up.railway.app/user/getFriends/${
+      `https://chat-app-pa3b.onrender.com/user/getFriends/${
         getState().auth.uid
       }`,
       {
@@ -150,7 +150,7 @@ export function getFriends() {
 export function getFriendRequests() {
   return async (dispatch, getState) => {
     Axios.get(
-      `https://chatapp-production-23a8.up.railway.app/user/getFriendRequests/${
+      `https://chat-app-pa3b.onrender.com/user/getFriendRequests/${
         getState().auth.uid
       }`,
       {
@@ -183,7 +183,7 @@ export function selectChat({ room_id, chat_type }) {
 export function getAllUsers() {
   return (dispatch, getState) => {
     Axios.get(
-      `https://chatapp-production-23a8.up.railway.app/user/getAllUsers/${
+      `https://chat-app-pa3b.onrender.com/user/getAllUsers/${
         getState().auth.uid
       }`,
       {

@@ -103,7 +103,7 @@ function Conatct() {
     }
     console.log("this is from make id ", id);
     Axios.post(
-      "https://chatapp-production-23a8.up.railway.app/user/makeAdmin",
+      "https://chat-app-pa3b.onrender.com/user/makeAdmin",
       {
         group_id: current_group_conversation?.group_id,
         user_id: id,
@@ -132,7 +132,7 @@ function Conatct() {
     if (current_group_conversation?.group_admin.includes(id?.toString())) {
       console.log("From dismiss admin", id);
       Axios.post(
-        "https://chatapp-production-23a8.up.railway.app/user/dismissAdmin",
+        "https://chat-app-pa3b.onrender.com/user/dismissAdmin",
         {
           group_id: current_group_conversation?.group_id,
           user_id: id,
@@ -164,7 +164,7 @@ function Conatct() {
   const removeParticipants = (id) => {
     // console.log("from reove", id);
     Axios.post(
-      "https://chatapp-production-23a8.up.railway.app/user/removeGroupParticipants",
+      "https://chat-app-pa3b.onrender.com/user/removeGroupParticipants",
       {
         group_id: current_group_conversation?.group_id,
         user_id: id,
@@ -195,7 +195,7 @@ function Conatct() {
 
   const getParticipants = () => {
     Axios.get(
-      `https://chatapp-production-23a8.up.railway.app/user/getParticipantsDetails/${current_group_conversation?.group_id}`,
+      `https://chat-app-pa3b.onrender.com/user/getParticipantsDetails/${current_group_conversation?.group_id}`,
       {
         headers: {
           "Content-Type": "application/json",

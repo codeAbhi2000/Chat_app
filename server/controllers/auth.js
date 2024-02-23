@@ -184,7 +184,7 @@ exports.forgotPassword = async (req, res) => {
         exp: Math.floor(Date.now() / 1000) + 600,
       };
       const authToken = jwt.sign(payload, secretKey);
-      const url = `https://chatapp-production-23a8.up.railway.app/resetPassword/${user[0]._id}/${authToken}`;
+      const url = `https://chat-app-pa3b.onrender.com/resetPassword/${user[0]._id}/${authToken}`;
 
       const template = genResetMailTemp(url);
 

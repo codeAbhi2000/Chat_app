@@ -52,7 +52,7 @@ export default slice.reducer;
 export function loginUseer(inputvalues) {
   return async (dispatch, getState) => {
     Axios.post(
-      "https://chatapp-production-23a8.up.railway.app/auth/login",
+      "https://chat-app-pa3b.onrender.com/auth/login",
       {
         ...inputvalues,
       },
@@ -93,7 +93,7 @@ export function logoutUser() {
 export function forgotPassword(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "https://chatapp-production-23a8.up.railway.app/auth/forgotPassword",
+      "https://chat-app-pa3b.onrender.com/auth/forgotPassword",
       {
         ...inputData,
       },
@@ -120,7 +120,7 @@ export function resetPassowrd(inputData) {
   const { uid, password, token } = inputData;
   return (dispatch, getState) => {
     Axios.post(
-      "https://chatapp-production-23a8.up.railway.app/auth/resetPassword",
+      "https://chat-app-pa3b.onrender.com/auth/resetPassword",
       {
         uid: uid,
         pass: password,
@@ -148,7 +148,7 @@ export function resetPassowrd(inputData) {
 export function registerUser(inputData) {
   return async (dispatch, getState) => {
     Axios.post(
-      "https://chatapp-production-23a8.up.railway.app/auth/register",
+      "https://chat-app-pa3b.onrender.com/auth/register",
       {
         ...inputData,
       },
@@ -177,7 +177,7 @@ export function registerUser(inputData) {
 export function verifyUser(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "https://chatapp-production-23a8.up.railway.app/auth/verifyOtp",
+      "https://chat-app-pa3b.onrender.com/auth/verifyOtp",
       {
         ...inputData,
       },

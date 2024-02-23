@@ -40,7 +40,7 @@ function SharedMsg() {
 
   const getPrivateSharedMessages = () => {
     Axios.get(
-      `https://chatapp-production-23a8.up.railway.app/user/getSharedMsg/${room_id}`,
+      `https://chat-app-pa3b.onrender.com/user/getSharedMsg/${room_id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +79,7 @@ function SharedMsg() {
 
   const getGroupSharedMessages = () => {
     Axios.get(
-      `https://chatapp-production-23a8.up.railway.app/user/getGrpSharedMsg/${room_id}`,
+      `https://chat-app-pa3b.onrender.com/user/getGrpSharedMsg/${room_id}`,
       {
         headers: {
           "Content-Type": "application/json",
