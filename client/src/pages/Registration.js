@@ -50,7 +50,7 @@ const Registration = () => {
         email:formData.email,
         password:formData.password
     }))
-    console.log(formData);
+    // console.log(formData);
     navigate('/enterOTP')
   };
 
