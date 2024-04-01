@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://pingpluse.netlify.app/",
+    origin: "https://pingpluse.netlify.app",
     methods: ["GET", "POST"],
   },
 });
