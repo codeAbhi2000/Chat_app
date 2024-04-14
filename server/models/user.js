@@ -33,6 +33,7 @@ class User {
   }
 
   static updateSocketIdAndStatus(uid, socket_id,status, callback) {
+    console.log(uid);
     const sql = "UPDATE users SET socket_id = ? , status = ? WHERE _id = ?";
     db.query(sql, [socket_id,status, uid], callback);
   }

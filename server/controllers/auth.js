@@ -166,17 +166,25 @@ exports.login = (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   const email = req.body.email;
+  let responseSent = false;
 
   User.findByEmail(email, (err, user) => {
-    // console.log(user);
+    console.log(user);
+    console.log(err);
     if (err) {
-      res.status(500).json({
-        msg: "Something went wrong",
-      });
+      if (!responseSent) {
+        res.status(500).json({
+          msg: "Something went wrong",
+        });
+        responseSent = true;
+      }
     } else if (user.length === 0) {
-      res.status(404).json({
-        msg: "Email does not exists",
-      });
+      if (!responseSent) {
+        res.status(404).json({
+          msg: "Email does not exist",
+        });
+        responseSent = true;
+      }
     } else {
       const payload = {
         email: user[0].email,
@@ -197,14 +205,22 @@ exports.forgotPassword = async (req, res) => {
 
       mailSender.sendMail(mailOptions, (err, info) => {
         if (err) {
-          res.status(500).json({
-            status: "error",
-            msg: "something went wrong",
-          });
+          console.log(err);
+          if (!responseSent) {
+            res.status(500).json({
+              status: "error",
+              msg: "Something went wrong",
+            });
+            responseSent = true;
+          }
+        } else {
+          if (!responseSent) {
+            res.status(200).json({
+              msg: "Password reset link is sent to your email",
+            });
+            responseSent = true;
+          }
         }
-        res.status(200).json({
-          msg: "Password reset link is sent to Your email",
-        });
       });
     }
   });

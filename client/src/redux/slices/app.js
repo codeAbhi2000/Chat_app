@@ -139,7 +139,7 @@ export function getFriends() {
       }
     )
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         dispatch(slice.actions.updateFriends({ friends: res.data.data }));
       })
       .catch((err) => {

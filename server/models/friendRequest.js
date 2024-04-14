@@ -9,7 +9,7 @@ class FriendRequests {
         db.query(sql,[sender,recipient],callback)
     }
     static getRequests(uid,callback){
-        const sql = 'SELECT f.id ,u.name, u._id, u.avatar FROM users u INNER JOIN friendrequest f ON u._id = f.recipient WHERE f.recipient = ?';
+        const sql = 'SELECT f.id ,u.name, u._id, u.avatar FROM users u INNER JOIN friendrequest f ON u._id = f.sender WHERE f.recipient = ?';
         db.query(sql ,[uid], callback)
     }
 
