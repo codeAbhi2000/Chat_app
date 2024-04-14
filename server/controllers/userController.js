@@ -43,6 +43,7 @@ exports.getFriends = (req, res, next) => {
         msg: "Something went wrong",
       });
     }
+    console.log(result);
     res.status(200).json({
       status: "success",
       data: result[0],
