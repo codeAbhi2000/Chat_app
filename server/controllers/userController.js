@@ -6,7 +6,7 @@ exports.getAllVerifiedUsers = (req, res, next) => {
   const uid = req.params.id;
   User.getAllVerifiedUser(uid, (err, result) => {
     if (err) {
-      res.status(500).json({
+      return res.status(500).json({
         status: "error",
         msg: "Something went wrong",
       });
@@ -22,7 +22,7 @@ exports.getAllOtherVerifiedUsers = (req, res, next) => {
   const uid = req.params.id;
   User.getAllOtherVerifiedUsers(uid, (err, result) => {
     if (err) {
-      res.status(500).json({
+      return res.status(500).json({
         status: "error",
         msg: "Something went wrong",
       });
@@ -38,7 +38,7 @@ exports.getFriends = (req, res, next) => {
   const uid = req.params.id;
   User.getFriends(uid, (err, result) => {
     if (err) {
-      res.status(500).json({
+      return res.status(500).json({
         status: "error",
         msg: "Something went wrong",
       });
@@ -54,7 +54,7 @@ exports.getRequests = (req, res, next) => {
   const uid = req.params.id;
   FriendRequests.getRequests(uid, (err, result) => {
     if (err) {
-      res.status(500).json({
+      return res.status(500).json({
         status: "error",
         msg: "Something went wrong",
       });
@@ -71,7 +71,7 @@ exports.createRequest = (req,res,next)=>{
     const {sender,recipient} = req.body
     FriendRequests.create(sender,recipient,(err,result)=>{
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
               status: "error",
               msg: "Something went wrong",
             });
