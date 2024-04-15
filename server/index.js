@@ -144,7 +144,7 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("start_conversation", (data) => {
-    // console.log(data);
+    console.log(data);
     Chating.checkForExistingChat(data.from, data.to, (err, result) => {
       console.log(result);
       if (err) {
@@ -157,7 +157,7 @@ io.on("connection", async (socket) => {
             if (err) {
               console.log(err);
             }
-            // console.log(chat_id);
+            console.log(chat_id);
             socket.emit("start_chat", { ...user2Details, chat_id });
           }
         );
