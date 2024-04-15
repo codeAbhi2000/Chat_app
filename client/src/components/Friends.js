@@ -33,7 +33,7 @@ const FriendsLists = () => {
   }, []);
 
   const { friends } = useSelector((state) => state.app);
-  console.log(friends);
+  console.log("from friend compomnet ",friends);
 
   return (
     <>
