@@ -144,7 +144,7 @@ export function FriendComponent({ name, avatar, _id, status }) {
         </Stack>
         <Stack direction={"row"} alignItems={"center"}>
           <IconButton onClick={()=>{
-                console.log("starting conversation");
+                console.log("starting conversation",_id);
                 socket.emit("start_conversation",{to: _id ,from : uid})
           }}>
             <Chat />
