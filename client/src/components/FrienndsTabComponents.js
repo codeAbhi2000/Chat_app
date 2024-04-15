@@ -112,6 +112,7 @@ export function FriendRequestComponent({ name, avatar, _id, online, id }) {
 }
 
 export function FriendComponent({ name, avatar, _id, status }) {
+    console.log(_id);
     const { uid } = useSelector((store) => store.auth);
   return (
     <StyledChatBox
