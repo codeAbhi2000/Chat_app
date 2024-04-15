@@ -13,7 +13,10 @@ class Chatting {
           JOIN participants p ON c.id = p.chat_id
           JOIN users u2 ON p.user_id = ? 
           WHERE c.id = LAST_INSERT_ID()
+
           `
+
+          console.log(userId1,userId2);
         // Execute the queries
         db.query(chatInsertSQL, (chatInsertError, results) => {
           if (chatInsertError) {
