@@ -46,7 +46,7 @@ exports.signup = (req, res, next) => {
 exports.sentOtp = async (req, res, next) => {
   const email = req.email;
   const id = res.locals.uid;
-  console.log("from send otp",id,email);
+  console.log("from send otp", id, email);
   const otp = otpGenerator.generate(6, {
     upperCaseAlphabets: false,
     lowerCaseAlphabets: false,
@@ -68,30 +68,27 @@ exports.sentOtp = async (req, res, next) => {
   const template = generatOtptmp(otp); // Implement this function
 
   //   console.log(template);
-  
-  const result = await mailSender({to:email,subject:"Your OTP for Account Verification",html:template,from:'abhishekvvet@gmail.com'})
 
-  if (result.status === "success"){
+  const result = await mailSender({
+    to: email,
+    subject: "Your OTP for Account Verification",
+    html: template,
+    from: "abhishekvvet@gmail.com",
+  });
+
+  if (result.status === "success") {
     res.status(200).json({
       status: "success",
       msg: "OTP sent successfully",
     });
     next();
-  }
-  else{
+  } else {
     return res.status(500).json({
       status: "error",
       msg: "Something went wrong",
     });
   }
-
-
-
-  
- 
 };
- 
-
 
 exports.verifyOTP = async (req, res, next) => {
   const { email, otp } = req.body;
@@ -193,7 +190,7 @@ exports.forgotPassword = async (req, res) => {
         exp: Math.floor(Date.now() / 1000) + 600,
       };
       const authToken = jwt.sign(payload, secretKey);
-      const url = `http://localhost:5000/resetPassword/${user[0]._id}/${authToken}`;
+      const url = `https://chat-app-pa3b.onrender.com/resetPassword/${user[0]._id}/${authToken}`;
 
       const template = genResetMailTemp(url);
 
