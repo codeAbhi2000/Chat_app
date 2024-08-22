@@ -53,6 +53,8 @@ export function UserComponent({ name, avatar, _id, online }) {
         <Stack direction={"row"} alignItems={"center"}>
           <Button
             onClick={() => {
+              console.log("emitting friend request");
+              
               socket.emit("friend_request", { to: _id, from: uid }, () => {
                 alert("Request sent");
               });
@@ -67,6 +69,8 @@ export function UserComponent({ name, avatar, _id, online }) {
 }
 
 export function FriendRequestComponent({ name, avatar, _id, online, id }) {
+  console.log(name, avatar, _id, online, id);
+  
   return (
     <StyledChatBox
       sx={{
@@ -98,6 +102,8 @@ export function FriendRequestComponent({ name, avatar, _id, online, id }) {
         <Stack direction={"row"} alignItems={"center"}>
           <Button
             onClick={() => {
+              console.log("emiting the accept");
+              
               socket.emit("accept_request", { request_id: id }, () => {
                 alert("Request sent");
               });

@@ -105,9 +105,7 @@ export function closeSnackBar() {
 export function getAllOtherUser() {
   return async (dispatch, getState) => {
     Axios.get(
-      `https://chat-app-pa3b.onrender.com/user/getOtherUsers/${
-        getState().auth.uid
-      }`,
+      `http://localhost:5000/user/getOtherUsers/${getState().auth.uid}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -127,17 +125,12 @@ export function getAllOtherUser() {
 
 export function getFriends() {
   return async (dispatch, getState) => {
-    Axios.get(
-      `https://chat-app-pa3b.onrender.com/user/getFriends/${
-        getState().auth.uid
-      }`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getState().auth.token,
-        },
-      }
-    )
+    Axios.get(`http://localhost:5000/user/getFriends/${getState().auth.uid}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getState().auth.token,
+      },
+    })
       .then((res) => {
         console.log(res);
         dispatch(slice.actions.updateFriends({ friends: res.data.data }));
@@ -150,9 +143,7 @@ export function getFriends() {
 export function getFriendRequests() {
   return async (dispatch, getState) => {
     Axios.get(
-      `https://chat-app-pa3b.onrender.com/user/getFriendRequests/${
-        getState().auth.uid
-      }`,
+      `http://localhost:5000/user/getFriendRequests/${getState().auth.uid}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -182,17 +173,12 @@ export function selectChat({ room_id, chat_type }) {
 
 export function getAllUsers() {
   return (dispatch, getState) => {
-    Axios.get(
-      `https://chat-app-pa3b.onrender.com/user/getAllUsers/${
-        getState().auth.uid
-      }`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getState().auth.token,
-        },
-      }
-    )
+    Axios.get(`http://localhost:5000/user/getAllUsers/${getState().auth.uid}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getState().auth.token,
+      },
+    })
       .then((res) => {
         // console.log(res);
         dispatch(slice.actions.upDateOtherUser({ allUsers: res.data.data }));

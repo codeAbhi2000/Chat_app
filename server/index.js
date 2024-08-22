@@ -36,7 +36,7 @@ io.on("connection", async (socket) => {
   //socket event listeners
 
   socket.on("friend_request", async (data) => {
-    // console.log(data);
+    console.log("request data",data);
 
     await User.findById(data.to, (err, res) => {
       // console.log(res);
@@ -70,7 +70,7 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("accept_request", (data) => {
-    console.log(data);
+    console.log("from accept",data);
 
     FriendRequests.findById(data.request_id, (err, result) => {
       if (err) {

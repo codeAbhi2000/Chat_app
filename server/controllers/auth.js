@@ -15,9 +15,9 @@ exports.signup = (req, res, next) => {
     if (err) {
       console.error(err);
       res.status(500).json({ error: "error", msg: "Something went wrong" });
-    } else if (results.length > 0 && !results[0].verified) {
+    } else if (results.length > 0 && !results[0]?.verified) {
       // res.status(500).json({ error: "error", msg: "User Already Exists" });
-      res.locals.uid = results[0]._id;
+      res.locals.uid = results[0]?._id;
       next();
     } else {
       bcrypt.hash(password, 10, (err, hash) => {
@@ -29,7 +29,7 @@ exports.signup = (req, res, next) => {
               res.status(500).json({ error: "User registration failed" });
             } else {
               // console.log(result);
-              const insertedId = result.insertId;
+              const insertedId = result?.insertId;
               // console.log(insertedId);
 
               res.locals.uid = insertedId;
@@ -43,10 +43,10 @@ exports.signup = (req, res, next) => {
   });
 };
 
-exports.sentOtp = (req, res, next) => {
+exports.sentOtp = async (req, res, next) => {
   const email = req.email;
   const id = res.locals.uid;
-  // console.log(id,email);
+  console.log("from send otp",id,email);
   const otp = otpGenerator.generate(6, {
     upperCaseAlphabets: false,
     lowerCaseAlphabets: false,
@@ -68,35 +68,36 @@ exports.sentOtp = (req, res, next) => {
   const template = generatOtptmp(otp); // Implement this function
 
   //   console.log(template);
-  const mailOptions = {
-    from: "abhishekvvet@gmail.com",
-    to: email.toString(), // Make sure you have the 'email' variable defined
-    subject: "Your OTP for Account Verification",
-    html: template,
-  };
+  
+  const result = await mailSender({to:email,subject:"Your OTP for Account Verification",html:template,from:'abhishekvvet@gmail.com'})
 
-  mailSender.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        status: "error",
-        msg: "Something went wrong",
-      });
-    }
-    console.log(info);
+  if (result.status === "success"){
     res.status(200).json({
       status: "success",
       msg: "OTP sent successfully",
     });
     next();
-  });
+  }
+  else{
+    return res.status(500).json({
+      status: "error",
+      msg: "Something went wrong",
+    });
+  }
+
+
+
+  
+ 
 };
+ 
+
 
 exports.verifyOTP = async (req, res, next) => {
   const { email, otp } = req.body;
-  // console.log(otp, email);
+  console.log(otp, email);
   User.findByEmail(email, (err, result) => {
-    // console.log(result);
+    console.log(result);
     if (err) {
       res.status(500).json({
         status: "error",
@@ -192,7 +193,7 @@ exports.forgotPassword = async (req, res) => {
         exp: Math.floor(Date.now() / 1000) + 600,
       };
       const authToken = jwt.sign(payload, secretKey);
-      const url = `https://chat-app-pa3b.onrender.com/resetPassword/${user[0]._id}/${authToken}`;
+      const url = `http://localhost:5000/resetPassword/${user[0]._id}/${authToken}`;
 
       const template = genResetMailTemp(url);
 

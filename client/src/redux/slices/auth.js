@@ -52,7 +52,7 @@ export default slice.reducer;
 export function loginUseer(inputvalues) {
   return async (dispatch, getState) => {
     Axios.post(
-      "https://chat-app-pa3b.onrender.com/auth/login",
+      "http://localhost:5000/auth/login",
       {
         ...inputvalues,
       },
@@ -63,7 +63,7 @@ export function loginUseer(inputvalues) {
       }
     )
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         dispatch(
           slice.actions.login({
             isLoggedIn: true,
@@ -73,12 +73,12 @@ export function loginUseer(inputvalues) {
             groupsIn: res.data.profile.groupsIn,
           })
         );
-        dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
+        dispatch(openSnackBar({ severity: "success", message: res?.data.msg }));
       })
       .catch((err) => {
         console.log(err);
         dispatch(
-          openSnackBar({ severity: "error", message: err.response.data.msg })
+          openSnackBar({ severity: "error", message: err?.response.data.msg })
         );
       });
   };
@@ -93,7 +93,7 @@ export function logoutUser() {
 export function forgotPassword(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "https://chat-app-pa3b.onrender.com/auth/forgotPassword",
+      "http://localhost:5000/auth/forgotPassword",
       {
         ...inputData,
       },
@@ -120,7 +120,7 @@ export function resetPassowrd(inputData) {
   const { uid, password, token } = inputData;
   return (dispatch, getState) => {
     Axios.post(
-      "https://chat-app-pa3b.onrender.com/auth/resetPassword",
+      "http://localhost:5000/auth/resetPassword",
       {
         uid: uid,
         pass: password,
@@ -134,21 +134,23 @@ export function resetPassowrd(inputData) {
     )
       .then((res) => {
         // console.log(res);
-        dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
+        dispatch(openSnackBar({ severity: "success", message: res?.data.msg }));
       })
       .catch((err) => {
         console.log(err);
         dispatch(
-          openSnackBar({ severity: "error", message: err.response.data.msg })
+          openSnackBar({ severity: "error", message: err.response?.data.msg })
         );
       });
   };
 }
 
 export function registerUser(inputData) {
+  console.log(inputData);
+  
   return async (dispatch, getState) => {
     Axios.post(
-      "https://chat-app-pa3b.onrender.com/auth/register",
+      "http://localhost:5000/auth/register",
       {
         ...inputData,
       },
@@ -163,12 +165,12 @@ export function registerUser(inputData) {
         dispatch(
           slice.actions.updateRegisterUserEmail({ email: inputData.email })
         );
-        dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
+        dispatch(openSnackBar({ severity: "success", message: res?.data.msg }));
       })
       .catch((err) => {
         console.log(err);
         dispatch(
-          openSnackBar({ severity: "error", message: err.response.data.msg })
+          openSnackBar({ severity: "error", message: err.response?.data.msg })
         );
       });
   };
@@ -177,7 +179,7 @@ export function registerUser(inputData) {
 export function verifyUser(inputData) {
   return (dispatch, getState) => {
     Axios.post(
-      "https://chat-app-pa3b.onrender.com/auth/verifyOtp",
+      "http://localhost:5000/auth/verifyOtp",
       {
         ...inputData,
       },
@@ -189,12 +191,12 @@ export function verifyUser(inputData) {
     )
       .then((res) => {
         // console.log(res);
-        dispatch(openSnackBar({ severity: "success", message: res.data.msg }));
+        dispatch(openSnackBar({ severity: "success", message: res?.data.msg }));
       })
       .catch((err) => {
         console.log(err);
         dispatch(
-          openSnackBar({ severity: "error", message: err.response.data.msg })
+          openSnackBar({ severity: "error", message: err.response?.data.msg })
         );
       });
   };

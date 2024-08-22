@@ -15,7 +15,7 @@ function Landing() {
   const handleSubmit = async ()=>{
     try {
       console.log('Dispatching loginUser action');
-      await dispatch(loginUseer({email:'vvietmedia.editor@gmail.com',password:'123'}));
+      await dispatch(loginUseer({email:'vvietmedia.editor@gmail.com',password:'321'}));
       console.log('Login successful');
   
       // After the login action is completed, navigate to the dashboard

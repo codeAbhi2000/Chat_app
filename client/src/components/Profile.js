@@ -103,16 +103,12 @@ function Profile() {
     formData.append("name", Profiledata.name);
     formData.append("profilePic", Profiledata.profilePic);
     formData.append("uid", uid);
-    Axios.post(
-      "https://chat-app-pa3b.onrender.com/user/updateProfile",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: token,
-        },
-      }
-    )
+    Axios.post("http://localhost:5000/user/updateProfile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: token,
+      },
+    })
       .then((res) => {
         // console.log(res);
         dispatch(openSnackBar({ severity: "success", message: res.data.msg }));

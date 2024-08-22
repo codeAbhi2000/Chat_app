@@ -14,40 +14,46 @@ import { verifyUser } from "../redux/slices/auth";
 import SnackbarAlert from "../components/Snackbar";
 
 const OTPInput = () => {
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { email } = useSelector((store) => store.auth);
-  const [otp, setOTP] = useState(["", "", "", "", "", ""]); // Initialize an array with 4 empty strings
-  const inputRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
+
+  // Initialize refs at the top level of the component
+  const inputRefs = useRef(Array.from({ length: 6 }, () => React.createRef()));
+
+  const [otp, setOTP] = useState(["", "", "", "", "", ""]); // 6 digits OTP
   const [timer, setTimer] = useState(300); // Set the initial expiration time (in seconds)
   const [isTimerRunning, setIsTimerRunning] = useState(true);
 
   const handleOTPChange = (event, index) => {
     const value = event.target.value;
-    if (value.length <= 1 && /^\d*$/.test(value)) {
+    if (value.length === 1 && /^\d$/.test(value)) {
       const newOTP = [...otp];
       newOTP[index] = value;
       setOTP(newOTP);
-      if (value && index < 5) {
-        inputRefs[index + 1].current.focus();
+      if (index < 5) {
+        inputRefs.current[index + 1].current.focus(); // Move to the next input
       }
     }
-  }; 
+  };
+
+  const handleKeyDown = (event, index) => {
+    if (event.key === "Backspace") {
+      const newOTP = [...otp];
+      if (newOTP[index]) {
+        newOTP[index] = ""; // Clear the current input
+        setOTP(newOTP);
+      } else if (index > 0) {
+        inputRefs.current[index - 1].current.focus(); // Move to the previous input
+      }
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const enteredOTP = otp.join("");
-    // You can implement OTP verification logic here
-  await  dispatch(verifyUser({otp:parseInt(enteredOTP),email}))
-    navigate('/login')
-    console.log(`Entered OTP: ${enteredOTP}`);
+    await dispatch(verifyUser({ otp: parseInt(enteredOTP), email }));
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -111,15 +117,23 @@ const OTPInput = () => {
                 sx={{ alignItems: "center", justifyContent: "space-evenly" }}
               >
                 {otp.map((digit, index) => (
-                  <Box key={index} sx={{ height: 30, width: 30 }}>
+                  <Box key={index} sx={{ height: 50, width: 50 }}>
                     <TextField
                       key={index}
                       variant="outlined"
-                      inputRef={inputRefs[index]}
-                      sx={{ lineHeight: 6 }}
+                      inputRef={inputRefs.current[index]}
                       value={digit}
                       onChange={(e) => handleOTPChange(e, index)}
+                      onKeyDown={(e) => handleKeyDown(e, index)}
                       type="text"
+                      inputProps={{
+                        maxLength: 1,
+                        style: {
+                          textAlign: "center",
+                          fontSize: "1.5rem",
+                          height: "50px",
+                        },
+                      }}
                     />
                   </Box>
                 ))}
@@ -134,7 +148,7 @@ const OTPInput = () => {
             </Stack>
           </form>
         </Stack>
-        <SnackbarAlert/>
+        <SnackbarAlert />
       </Box>
     </Container>
   );
